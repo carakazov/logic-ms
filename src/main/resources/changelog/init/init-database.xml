@@ -3,5 +3,48 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="001" author="vadim.lebediantsev">
+        <createTable tableName="clients">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="external_id" type="uuid"/>
+        </createTable>
 
+        <createTable tableName="directories">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="external_id" type="uuid"/>
+            <column name="client_id" type="bigint">
+                <constraints foreignKeyName="directory_client_fk" references="clients(id)"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="notes">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="external_id" type="uuid"/>
+            <column name="directory_id" type="bigint">
+                <constraints foreignKeyName="directory_note_fk" references="directories(id)"/>
+            </column>
+            <column name="client_id" type="bigint">
+                <constraints foreignKeyName="client_note_fk" references="clients(id)"/>
+            </column>
+        </createTable>
+        
+        <createTable tableName="access">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="note_id" type="bigint">
+                <constraints foreignKeyName="access_note_fk" references="notes(id)"/>
+            </column>
+            <column name="client_id" type="bigint">
+                <constraints foreignKeyName="access_client_fk" references="clients(id)"/>
+            </column>
+            <column name="access_mode" type="varchar(25)"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

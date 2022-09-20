@@ -1,9 +1,9 @@
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: #FIXME
-    username: #FIXME
-    password: #FIXME
+    url: jdbc:postgresql://localhost:5432/logic_ms
+    username: logic_ms_user
+    password: 1q2w3e
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: true
