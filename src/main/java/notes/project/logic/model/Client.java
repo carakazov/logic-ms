@@ -18,4 +18,6 @@ public class Client {
     private Long id;
 
     private UUID externalId;
+
+    private UUID clusterExternalId;
 }

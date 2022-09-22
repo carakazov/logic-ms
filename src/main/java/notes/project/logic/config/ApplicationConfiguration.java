@@ -2,12 +2,18 @@ package notes.project.logic.config;
 
 import java.util.TimeZone;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dto.integration.kafka.RestorePasswordRequestDto;
+import dto.integration.kafka.UserInfoAdditionalInfoDto;
+import dto.integration.kafka.UserInfoDto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -27,5 +33,15 @@ public class ApplicationConfiguration {
         objectMapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
         objectMapper.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
         return objectMapper;
+    }
+
+    @Bean
+    public static Unmarshaller unmarshaller() throws Exception {
+        JAXBContext context = JAXBContext.newInstance(
+            UserInfoDto.class,
+            UserInfoAdditionalInfoDto.class,
+            RestorePasswordRequestDto.class
+        );
+        return context.createUnmarshaller();
     }
 }
