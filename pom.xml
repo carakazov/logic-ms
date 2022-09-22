@@ -22,11 +22,6 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-boot-starter</artifactId>
-            <version>19.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jdbc</artifactId>
         </dependency>
@@ -54,6 +49,10 @@
             <type>pom</type>
         </dependency>
         -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -88,6 +87,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
             <version>5.3.22</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
         <!--
         <dependency>
@@ -126,8 +129,34 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <version>2.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream-binder-kafka</artifactId>
+            <version>3.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream</artifactId>
+            <version>3.2.4</version>
+        </dependency>
     </dependencies>
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2021.0.4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
         <plugins>
             <plugin>
@@ -162,6 +191,84 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>xjc-foo</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceType>wsdl</sourceType>
+                            <xjbSources>
+                                <xjbSource>
+                                    src/main/resources/xjc/global.xjb
+                                </xjbSource>
+                            </xjbSources>
+                            <sources>
+                                <!-- if you put path only, it will read any wsdl or xsd file -->
+                                <!-- if you have xsd that is imported in wsdl, then make sure you point it wsdl file -->
+                                <source>${project.basedir}/src/main/resources/xjc/xsd/</source>
+                            </sources>
+                            <clearOutputDir>true</clearOutputDir>
+                            <packageName>dto.integration.kafka</packageName>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.activation</groupId>
+                        <artifactId>activation</artifactId>
+                        <version>1.1.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>download-xjc</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://localhost:8000/my/content</url>
+                            <fromFile>xjc/global.xjb</fromFile>
+                            <toDir>src/main/resources/xjc</toDir>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-xsd-1</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://localhost:8000/my/content</url>
+                            <fromFile>xjc/xsd/InitializeRestoringPasswordProcessKafkaMessage.xsd</fromFile>
+                            <toDir>src/main/resources/xjc/xsd</toDir>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-xsd-2</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://localhost:8000/my/content</url>
+                            <fromFile>xjc/xsd/ServiceRegistrationKafkaResponse.xsd</fromFile>
+                            <toDir>src/main/resources/xjc/xsd</toDir>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

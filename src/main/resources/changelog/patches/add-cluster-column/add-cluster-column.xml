@@ -3,7 +3,11 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-
-    <!--Add cluster column-->
-    <include file="changelog/patches/add-cluster-column/add-cluster-column.xml"/>
+    <changeSet id="002" author="vadim.lebediantsev">
+        <addColumn tableName="clients">
+            <column name="cluster_external_id" type="uuid">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
