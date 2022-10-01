@@ -1,6 +1,6 @@
 package notes.project.logic.handler.impl;
 
-import dto.integration.kafka.UserInfoDto;
+import dto.integration.kafka.ServiceClientAdditionalInfoKafkaDto;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.handler.NewClientHandler;
 import notes.project.logic.service.api.ClientService;
@@ -12,7 +12,7 @@ public class NewClientHandlerImpl implements NewClientHandler {
     private final ClientService clientService;
 
     @Override
-    public void handle(UserInfoDto userInfo) {
+    public void handle(ServiceClientAdditionalInfoKafkaDto userInfo) {
         clientService.save(userInfo.getExternalId());
     }
 }

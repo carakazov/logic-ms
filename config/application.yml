@@ -20,7 +20,7 @@ spring:
       kafka:
         binder:
           brokers: localhost
-          defaultBrokerPort: 9092
+          defaultBrokerPort: 29092
           replication-factor: 1
       bindings:
         newUserListener-in-0:

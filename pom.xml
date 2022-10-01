@@ -239,8 +239,8 @@
                             <goal>download-single</goal>
                         </goals>
                         <configuration>
-                            <url>http://localhost:8000/my/content</url>
-                            <fromFile>xjc/global.xjb</fromFile>
+                            <url>http://localhost:8999/content</url>
+                            <fromFile>global.xjb</fromFile>
                             <toDir>src/main/resources/xjc</toDir>
                         </configuration>
                     </execution>
@@ -251,8 +251,8 @@
                             <goal>download-single</goal>
                         </goals>
                         <configuration>
-                            <url>http://localhost:8000/my/content</url>
-                            <fromFile>xjc/xsd/InitializeRestoringPasswordProcessKafkaMessage.xsd</fromFile>
+                            <url>http://localhost:8999/content</url>
+                            <fromFile>xsd/InitializeRestoringPasswordProcessKafkaMessage.xsd</fromFile>
                             <toDir>src/main/resources/xjc/xsd</toDir>
                         </configuration>
                     </execution>
@@ -263,8 +263,8 @@
                             <goal>download-single</goal>
                         </goals>
                         <configuration>
-                            <url>http://localhost:8000/my/content</url>
-                            <fromFile>xjc/xsd/ServiceRegistrationKafkaResponse.xsd</fromFile>
+                            <url>http://localhost:8999/content</url>
+                            <fromFile>xsd/ServiceRegistrationKafkaResponse.xsd</fromFile>
                             <toDir>src/main/resources/xjc/xsd</toDir>
                         </configuration>
                     </execution>

@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import dto.integration.kafka.UserInfoDto;
+import dto.integration.kafka.ServiceClientAdditionalInfoKafkaDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import notes.project.logic.exception.ExceptionCode;
@@ -27,7 +27,7 @@ public class NewClientListenerImpl implements NewClientListener {
         try {
             log.info("Accepted message {}", message);
             StringReader stringReader = new StringReader(message);
-            UserInfoDto userInfo = (UserInfoDto) unmarshaller.unmarshal(stringReader);
+            ServiceClientAdditionalInfoKafkaDto userInfo = (ServiceClientAdditionalInfoKafkaDto) unmarshaller.unmarshal(stringReader);
             handler.handle(userInfo);
         } catch(Exception exception) {
             log.error("Exception occurred {}", exception.getMessage());

@@ -11,9 +11,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dto.integration.kafka.RestorePasswordRequestDto;
-import dto.integration.kafka.UserInfoAdditionalInfoDto;
-import dto.integration.kafka.UserInfoDto;
+import dto.integration.kafka.RestorePasswordRequestKafkaDto;
+import dto.integration.kafka.ServiceClientAdditionalInfoRecordKafkaDto;
+import dto.integration.kafka.ServiceClientAdditionalInfoKafkaDto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -38,9 +38,9 @@ public class ApplicationConfiguration {
     @Bean
     public static Unmarshaller unmarshaller() throws Exception {
         JAXBContext context = JAXBContext.newInstance(
-            UserInfoDto.class,
-            UserInfoAdditionalInfoDto.class,
-            RestorePasswordRequestDto.class
+            ServiceClientAdditionalInfoKafkaDto.class,
+            ServiceClientAdditionalInfoRecordKafkaDto.class,
+            RestorePasswordRequestKafkaDto.class
         );
         return context.createUnmarshaller();
     }
