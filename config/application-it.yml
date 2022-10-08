@@ -9,3 +9,21 @@ application:
   errorMessages:
     internalError: internal error
     wrongRequestParameters: wrong request parameters
+  externalServices:
+    fileSystem:
+      name: file-system-client
+      url: http://localhost:23845/
+    userData:
+      name: user-data-system-client
+      url: http://localhost:23845/
+  keycloakServerProfile:
+    url: http://localhost:23845/auth/realms/file-system-realm/protocol/openid-connect/token
+    grantType: password
+    clientId: file-system-client
+    username: file-system-user
+    password: 1q2w3e
+  internalServerProfile:
+    url: http://localhost:23845/oauth/token
+    grantType: client_credentials
+    clientId: test-system
+    clientSecret: my-client-secret

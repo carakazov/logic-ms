@@ -1,0 +1,13 @@
+{
+  "name": "name",
+  "surname": "surname",
+  "middleName": "middle name",
+  "birthDate": "2000-10-10",
+  "externalId": "1c7b68c7-df51-4f95-b90f-8cb9748e3635",
+  "additionalInfo": [
+    {
+      "type": "type",
+      "value": "value"
+    }
+  ]
+}

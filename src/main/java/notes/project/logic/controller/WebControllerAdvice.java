@@ -3,6 +3,7 @@ package notes.project.logic.controller;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.ErrorDto;
 import notes.project.logic.dto.ValidationErrorDto;
+import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.utils.ErrorHelper;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,11 @@ public class WebControllerAdvice {
     public ResponseEntity<ValidationErrorDto> handleValidationError(ValidationException exception) {
         ValidationErrorDto validationErrorDto = errorHelper.from(exception);
         return new ResponseEntity<>(validationErrorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorDto> handleNotFoundException(NotFoundException exception) {
+        ErrorDto errorDto = errorHelper.from(exception);
+        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 }

@@ -1,0 +1,10 @@
+{
+  "access_token": "accessToken",
+  "token_type": "tokenType",
+  "expires_in": 100,
+  "scope": "scope",
+  "refresh_token_expires_in": 200,
+  "refresh_token": "refreshToken",
+  "not_before_policy": 10,
+  "session_state": 10
+}
