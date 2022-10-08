@@ -3,6 +3,7 @@ package notes.project.logic.utils.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import notes.project.logic.config.ApplicationProperties;
+import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.utils.ErrorHelper;
 import notes.project.logic.dto.ErrorDto;
 import notes.project.logic.dto.ValidationErrorDto;
@@ -48,6 +49,15 @@ public class ErrorHelperImpl implements ErrorHelper {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(getMessageByCode(ExceptionCode.WRONG_REQUEST_PARAMETERS));
         errorDto.setCode(ExceptionCode.WRONG_REQUEST_PARAMETERS.getCode());
+        return errorDto;
+    }
+
+    @Override
+    public ErrorDto from(NotFoundException exception) {
+        logException(exception);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setCode(ExceptionCode.NOT_FOUND.getCode());
+        errorDto.setMessage(getMessageByCode(ExceptionCode.NOT_FOUND));
         return errorDto;
     }
 

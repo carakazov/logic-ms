@@ -1,5 +1,6 @@
 package notes.project.logic.utils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -34,4 +35,11 @@ public class TestDataConstants {
     public static final UUID CLUSTER_EXTERNAL_ID = UUID.fromString("e730fd34-78b9-41ab-8dd7-33c24c8fda23");
     public static final LocalDateTime CLUSTER_CREATE_DATE = LocalDateTime.of(2022, 10, 10, 10, 10, 10);
     public static final String CLUSTER_TITLE = "1c7b68c7-df51-4f95-b90f-8cb9748e3635-cluster";
+
+    public static final String CLIENT_ADDITIONAL_INFO_TYPE = "type";
+    public static final String CLIENT_ADDITIONAL_INFO_VALUE = "value";
+    public static final String CLIENT_NAME = "name";
+    public static final String CLIENT_SURNAME = "surname";
+    public static final String CLIENT_MIDDLE_NAME = "middle name";
+    public static final LocalDate CLIENT_BIRTH_DATE = LocalDate.of(2000, 10, 10);
 }

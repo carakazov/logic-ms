@@ -5,13 +5,19 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
+import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
+import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
 import notes.project.logic.repository.ClientRepository;
 import notes.project.logic.service.api.ClientService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
+import notes.project.logic.service.integration.http.UserDataSystemRestService;
 import notes.project.logic.utils.mapper.CreateClientMapper;
+import notes.project.logic.utils.mapper.PersonalInfoMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +29,8 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository repository;
     private final CreateClientMapper createClientMapper;
     private final FileSystemRestService fileSystemRestService;
+    private final UserDataSystemRestService userDataSystemRestService;
+    private final PersonalInfoMapper personalInfoMapper;
 
     @Override
     @Transactional
@@ -31,5 +39,20 @@ public class ClientServiceImpl implements ClientService {
         CreateClusterResponseDto createClusterResponse = fileSystemRestService.createCluster(new CreateClusterRequestDto(clusterTitle));
         Client client = createClientMapper.to(externalId, createClusterResponse.getExternalId());
         return repository.save(client);
+    }
+
+    @Override
+    @Cacheable(value = "personalInfo", key = "#externalId")
+    public PersonalInfoDto getPersonalInfo(UUID externalId) {
+        Client client = findByExternalId(externalId);
+        UserDataSystemPersonalInfoDto personalInfo = userDataSystemRestService.getPersonalInfo(client.getExternalId());
+        return personalInfoMapper.to(personalInfo);
+    }
+
+    @Override
+    public Client findByExternalId(UUID externalId) {
+        return repository.findByExternalId(externalId).orElseThrow(
+            () -> new NotFoundException("Client with id " + externalId + " not found")
+        );
     }
 }
