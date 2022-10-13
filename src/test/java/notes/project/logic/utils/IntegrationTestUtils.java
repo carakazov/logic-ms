@@ -5,6 +5,8 @@ import java.util.Collections;
 import lombok.experimental.UtilityClass;
 import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
+import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryRequestDto;
+import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemAdditionalInfoDto;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
 import notes.project.logic.oauth.dto.InternalServerTokenResponseDto;
@@ -14,6 +16,20 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemCreateDirectoryResponseDto fileSystemCreateDirectoryResponseDto() {
+        return new FileSystemCreateDirectoryResponseDto()
+            .setClusterName(CLUSTER_TITLE)
+            .setCreationDate(DIRECTORY_CREATION_TIME)
+            .setDirectoryName(DIRECTORY_NAME)
+            .setExternalId(DIRECTORY_EXTERNAL_ID);
+    }
+
+    public static FileSystemCreateDirectoryRequestDto fileSystemCreateDirectoryRequestDto() {
+        return new FileSystemCreateDirectoryRequestDto()
+            .setDirectoryName(DIRECTORY_NAME)
+            .setClusterExternalId(CLUSTER_EXTERNAL_ID);
+    }
+
     public static UserDataSystemPersonalInfoDto userDataSystemPersonalInfoDto() {
         return new UserDataSystemPersonalInfoDto()
             .setName(CLIENT_NAME)
