@@ -42,4 +42,9 @@ public class TestDataConstants {
     public static final String CLIENT_SURNAME = "surname";
     public static final String CLIENT_MIDDLE_NAME = "middle name";
     public static final LocalDate CLIENT_BIRTH_DATE = LocalDate.of(2000, 10, 10);
+
+    public static final String DIRECTORY_NAME = "dir name";
+    public static final LocalDateTime DIRECTORY_CREATION_TIME = LocalDateTime.of(2022, 10, 10, 10, 10, 10);
+    public static final String DIRECTORY_EXTERNAL_ID_AS_STRING = "a8314703-2bfe-46f9-ae10-9d54ed81e33f";
+    public static final UUID DIRECTORY_EXTERNAL_ID = UUID.fromString(DIRECTORY_EXTERNAL_ID_AS_STRING);
 }

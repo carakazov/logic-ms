@@ -58,7 +58,7 @@ application:
   internalServerProfile:
     url: http://localhost:8081/oauth/token
     grantType: client_credentials
-    clientId: test-system
+    clientId: notes-system
     clientSecret: my-client-secret
 #keycloak:
 #  auth-server-url: #FIXME

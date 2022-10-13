@@ -1,4 +1,4 @@
-package notes.project.logic.utils;
+package notes.project.logic.utils.helper;
 
 import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;

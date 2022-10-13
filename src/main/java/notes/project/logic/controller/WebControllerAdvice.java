@@ -8,6 +8,7 @@ import notes.project.logic.exception.ValidationException;
 import notes.project.logic.utils.ErrorHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,6 +18,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class WebControllerAdvice {
     private final ErrorHelper errorHelper;
 
+
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception) {
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleCommonException(Exception exception) {
