@@ -1,8 +1,11 @@
 package notes.project.logic.controller;
 
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.ErrorDto;
 import notes.project.logic.dto.ValidationErrorDto;
+import notes.project.logic.exception.IntegrationException;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.utils.ErrorHelper;
@@ -18,17 +21,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class WebControllerAdvice {
     private final ErrorHelper errorHelper;
 
-
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception) {
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleCommonException(Exception exception) {
         ErrorDto errorDto = errorHelper.from(exception);
         return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(IntegrationException.class)
+    public ResponseEntity<Map<?, ?>> handleIntegrationException(IntegrationException exception) {
+        return new ResponseEntity<>(exception.getOriginBody(), HttpStatus.resolve(exception.getOriginHttpStatus()));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception) {
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
