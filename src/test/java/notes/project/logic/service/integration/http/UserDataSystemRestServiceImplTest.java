@@ -3,6 +3,7 @@ package notes.project.logic.service.integration.http;
 import feign.FeignException;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemAdditionalInfoDto;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
+import notes.project.logic.exception.IntegrationException;
 import notes.project.logic.exception.LogicMsException;
 import notes.project.logic.service.integration.http.client.UserDataSystemFeignClient;
 import notes.project.logic.service.integration.http.impl.UserDataSystemRestServiceImpl;
@@ -52,7 +53,7 @@ class UserDataSystemRestServiceImplTest {
         when(client.getPersonalInfo(any())).thenThrow(FeignException.class);
 
         assertThrows(
-            LogicMsException.class,
+            IntegrationException.class,
             () -> service.getPersonalInfo(CLIENT_EXTERNAL_ID)
         );
 
