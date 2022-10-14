@@ -1,5 +1,6 @@
 package notes.project.logic.service.api.impl;
 
+import java.util.UUID;
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import notes.project.logic.dto.api.CreateDirectoryRequestDto;
 import notes.project.logic.dto.api.CreateDirectoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryRequestDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
+import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
 import notes.project.logic.model.Directory;
 import notes.project.logic.repository.DirectoryRepository;
@@ -36,5 +38,13 @@ public class DirectoryServiceImpl implements DirectoryService {
         Directory directory = createDirectoryMapper.toDirectory(client, response);
         repository.save(directory);
         return response;
+    }
+
+    @Override
+    @Transactional
+    public Directory findDirectoryByExternalId(UUID externalId) {
+        return repository.findByExternalId(externalId).orElseThrow(
+            () -> new NotFoundException("Directory with id " + externalId + " not found")
+        );
     }
 }

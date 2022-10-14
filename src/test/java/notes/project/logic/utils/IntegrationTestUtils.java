@@ -3,10 +3,7 @@ package notes.project.logic.utils;
 import java.util.Collections;
 
 import lombok.experimental.UtilityClass;
-import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
-import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryRequestDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
+import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemAdditionalInfoDto;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
 import notes.project.logic.oauth.dto.InternalServerTokenResponseDto;
@@ -16,6 +13,20 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemCreateFileRequestDto fileSystemCreateFileRequestDto() {
+        return new FileSystemCreateFileRequestDto()
+            .setContent(NOTE_CONTENT)
+            .setDirectoryExternalId(DIRECTORY_EXTERNAL_ID)
+            .setTitle(NOTE_TITLE);
+    }
+
+    public static FileSystemCreateFileResponseDto fileSystemCreateFileResponseDto() {
+        return new FileSystemCreateFileResponseDto()
+            .setCreatedDate(NOTE_CREATED_DATE)
+            .setExternalId(NOTE_EXTERNAL_ID)
+            .setTitle(NOTE_TITLE);
+    }
+
     public static FileSystemCreateDirectoryResponseDto fileSystemCreateDirectoryResponseDto() {
         return new FileSystemCreateDirectoryResponseDto()
             .setClusterName(CLUSTER_TITLE)

@@ -1,9 +1,6 @@
 package notes.project.logic.service.integration.http.client;
 
-import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
-import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryRequestDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
+import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.oauth.TokenSource;
 import notes.project.logic.utils.token.TokenRequest;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,4 +17,8 @@ public interface FileSystemFeignClient {
     @PostMapping("/directory")
     @TokenRequest
     ResponseEntity<FileSystemCreateDirectoryResponseDto> createDirectory(@RequestBody FileSystemCreateDirectoryRequestDto request);
+
+    @PostMapping("/file")
+    @TokenRequest
+    ResponseEntity<FileSystemCreateFileResponseDto> createFile(@RequestBody FileSystemCreateFileRequestDto request);
 }

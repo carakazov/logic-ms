@@ -3,6 +3,7 @@ package notes.project.logic.service.integration.http;
 import feign.FeignException;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
+import notes.project.logic.dto.integration.filesystem.FileSystemCreateFileResponseDto;
 import notes.project.logic.exception.IntegrationException;
 import notes.project.logic.exception.LogicMsException;
 import notes.project.logic.service.integration.http.client.FileSystemFeignClient;
@@ -79,5 +80,16 @@ class FileSystemRestServiceImplTest {
             LogicMsException.class,
             () -> service.createCluster(IntegrationTestUtils.createClusterRequestDto())
         );
+    }
+
+    @Test
+    void createFileSuccess() {
+        FileSystemCreateFileResponseDto expected = IntegrationTestUtils.fileSystemCreateFileResponseDto();
+
+        when(client.createFile(any())).thenReturn(ResponseEntity.ok(expected));
+
+        FileSystemCreateFileResponseDto actual = service.createFile(IntegrationTestUtils.fileSystemCreateFileRequestDto());
+
+        verify(client).createFile(IntegrationTestUtils.fileSystemCreateFileRequestDto());
     }
 }
