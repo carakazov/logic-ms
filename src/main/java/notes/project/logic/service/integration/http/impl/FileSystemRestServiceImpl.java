@@ -3,10 +3,7 @@ package notes.project.logic.service.integration.http.impl;
 import feign.FeignException;
 import liquibase.pro.packaged.P;
 import lombok.RequiredArgsConstructor;
-import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
-import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryRequestDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
+import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.service.integration.http.AbstractRestService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.service.integration.http.client.FileSystemFeignClient;
@@ -35,6 +32,18 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         ResponseEntity<FileSystemCreateDirectoryResponseDto> response;
         try {
             response = client.createDirectory(request);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+        return response.getBody();
+    }
+
+    @Override
+    public FileSystemCreateFileResponseDto createFile(FileSystemCreateFileRequestDto request) {
+        ResponseEntity<FileSystemCreateFileResponseDto> response;
+        try {
+            response = client.createFile(request);
         } catch(FeignException exception) {
             throw handleFeignException(exception);
         }

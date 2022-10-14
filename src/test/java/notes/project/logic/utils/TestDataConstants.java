@@ -47,4 +47,12 @@ public class TestDataConstants {
     public static final LocalDateTime DIRECTORY_CREATION_TIME = LocalDateTime.of(2022, 10, 10, 10, 10, 10);
     public static final String DIRECTORY_EXTERNAL_ID_AS_STRING = "a8314703-2bfe-46f9-ae10-9d54ed81e33f";
     public static final UUID DIRECTORY_EXTERNAL_ID = UUID.fromString(DIRECTORY_EXTERNAL_ID_AS_STRING);
+
+    public static final String NOTE_CONTENT = "test content";
+    public static final String NOTE_TITLE = "note title";
+
+    public static final LocalDateTime NOTE_CREATED_DATE = LocalDateTime.of(2022, 10, 10, 10, 10,10);
+    public static final String NOTE_EXTERNAL_ID_AS_STRING = "86c16469-229d-4fb6-a90e-a3a0f67dca8a";
+    public static final UUID NOTE_EXTERNAL_ID = UUID.fromString(NOTE_EXTERNAL_ID_AS_STRING);
+
 }

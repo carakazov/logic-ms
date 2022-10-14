@@ -4,10 +4,7 @@ import java.util.Collections;
 
 import lombok.experimental.UtilityClass;
 import notes.project.logic.dto.*;
-import notes.project.logic.dto.api.AdditionalInfoDto;
-import notes.project.logic.dto.api.CreateDirectoryRequestDto;
-import notes.project.logic.dto.api.CreateDirectoryResponseDto;
-import notes.project.logic.dto.api.PersonalInfoDto;
+import notes.project.logic.dto.api.*;
 import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
 import notes.project.logic.exception.ExceptionCode;
@@ -17,6 +14,20 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static CreateNoteRequestDto createNoteRequestDto() {
+        return new CreateNoteRequestDto()
+            .setContent(NOTE_CONTENT)
+            .setDirectoryExternalId(DIRECTORY_EXTERNAL_ID)
+            .setTitle(NOTE_TITLE);
+    }
+
+    public static CreateNoteResponseDto createNoteResponseDto() {
+        return new CreateNoteResponseDto()
+            .setCreatedDate(NOTE_CREATED_DATE)
+            .setExternalId(NOTE_EXTERNAL_ID)
+            .setTitle(NOTE_TITLE);
+    }
+
     public static CreateDirectoryResponseDto createDirectoryResponseDto() {
         return new CreateDirectoryResponseDto()
             .setClusterName(CLUSTER_TITLE)
