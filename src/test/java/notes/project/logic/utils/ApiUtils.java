@@ -2,6 +2,7 @@ package notes.project.logic.utils;
 
 import java.util.Collections;
 
+import liquibase.pro.packaged.M;
 import lombok.experimental.UtilityClass;
 import notes.project.logic.dto.*;
 import notes.project.logic.dto.api.*;
@@ -14,6 +15,19 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static MoveNoteResponseDto moveNoteResponseDto() {
+        return new MoveNoteResponseDto()
+            .setCreatedFileExternalId(NOTE_EXTERNAL_ID)
+            .setNewDirectoryExternalId(DIRECTORY_ALTERNATE_EXTERNAL_ID)
+            .setReplacingDate(NOTE_MOVING_DATE);
+    }
+
+    public static MoveNoteRequestDto moveNoteRequestDto() {
+        return new MoveNoteRequestDto()
+            .setCreatedFileExternalId(NOTE_EXTERNAL_ID)
+            .setNewDirectoryExternalId(DIRECTORY_ALTERNATE_EXTERNAL_ID);
+    }
+
     public static CreateNoteRequestDto createNoteRequestDto() {
         return new CreateNoteRequestDto()
             .setContent(NOTE_CONTENT)

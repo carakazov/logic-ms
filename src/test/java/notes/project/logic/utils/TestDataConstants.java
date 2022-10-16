@@ -55,4 +55,7 @@ public class TestDataConstants {
     public static final String NOTE_EXTERNAL_ID_AS_STRING = "86c16469-229d-4fb6-a90e-a3a0f67dca8a";
     public static final UUID NOTE_EXTERNAL_ID = UUID.fromString(NOTE_EXTERNAL_ID_AS_STRING);
 
+    public static final String DIRECTORY_ALTERNATE_EXTERNAL_ID_AS_STRING = "3341d5bb-e69c-4db8-a603-e500f6c54e97";
+    public static final UUID DIRECTORY_ALTERNATE_EXTERNAL_ID = UUID.fromString(DIRECTORY_ALTERNATE_EXTERNAL_ID_AS_STRING);
+    public static final LocalDateTime NOTE_MOVING_DATE = LocalDateTime.of(2022, 10, 10, 12, 12, 12);
 }

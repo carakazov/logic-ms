@@ -6,6 +6,7 @@ import notes.project.logic.utils.token.TokenRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(value = "${application.externalServices.fileSystem.name}", url = "${application.externalServices.fileSystem.url}")
@@ -21,4 +22,8 @@ public interface FileSystemFeignClient {
     @PostMapping("/file")
     @TokenRequest
     ResponseEntity<FileSystemCreateFileResponseDto> createFile(@RequestBody FileSystemCreateFileRequestDto request);
+
+    @PutMapping("/file")
+    @TokenRequest
+    ResponseEntity<FileSystemChangeFileDirectoryResponseDto> changeFileDirectory(@RequestBody FileSystemChangeFileDirectoryRequestDto request);
 }

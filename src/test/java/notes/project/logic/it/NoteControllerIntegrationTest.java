@@ -2,6 +2,7 @@ package notes.project.logic.it;
 
 import javax.inject.Inject;
 
+import liquibase.pro.packaged.D;
 import notes.project.logic.controller.DirectoryController;
 import notes.project.logic.controller.NoteController;
 import notes.project.logic.model.Note;
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
@@ -82,4 +84,38 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
 
         assertNotNull(note);
     }
+
+    @Test
+    void moveDirectorySuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubKeycloakToken();
+
+        testEntityManager.merge(DbUtils.client());
+        testEntityManager.merge(DbUtils.directory());
+        testEntityManager.merge(DbUtils.alternateDirectory());
+        testEntityManager.merge(DbUtils.note());
+
+        stubFor(put(urlMatching("/file"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/filesystem/ChangeFileDirectoryResponse.json"))
+                .withStatus(HttpStatus.OK.value())));
+
+        String expected = TestUtils.getClasspathResource("/api/MoveNoteResponse.json");
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.put("/note")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtils.getClasspathResource("/api/MoveNoteRequest.json")))
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+
+        Note note = testEntityManager.getEntityManager().createQuery(
+            "select note from notes note",
+            Note.class
+        ).getSingleResult();
+
+        assertEquals(DbUtils.alternateDirectory(), note.getDirectory());
+    }
+
 }

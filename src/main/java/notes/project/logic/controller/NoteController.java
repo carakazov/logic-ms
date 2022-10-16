@@ -5,12 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.CreateNoteRequestDto;
 import notes.project.logic.dto.api.CreateNoteResponseDto;
+import notes.project.logic.dto.api.MoveNoteRequestDto;
+import notes.project.logic.dto.api.MoveNoteResponseDto;
 import notes.project.logic.service.api.NoteService;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +23,11 @@ public class NoteController {
     @Secured("ROLE_USER")
     public CreateNoteResponseDto createNote(@RequestBody CreateNoteRequestDto request) {
         return noteService.createNote(request);
+    }
+
+    @PutMapping
+    @ApiOperation(value = "Перемещение записки")
+    public MoveNoteResponseDto moveNote(@RequestBody MoveNoteRequestDto request) {
+        return noteService.moveNote(request);
     }
 }

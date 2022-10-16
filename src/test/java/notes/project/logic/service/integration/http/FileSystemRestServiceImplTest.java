@@ -2,6 +2,7 @@ package notes.project.logic.service.integration.http;
 
 import feign.FeignException;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
+import notes.project.logic.dto.integration.filesystem.FileSystemChangeFileDirectoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateFileResponseDto;
 import notes.project.logic.exception.IntegrationException;
@@ -90,6 +91,21 @@ class FileSystemRestServiceImplTest {
 
         FileSystemCreateFileResponseDto actual = service.createFile(IntegrationTestUtils.fileSystemCreateFileRequestDto());
 
+        assertEquals(expected, actual);
+
         verify(client).createFile(IntegrationTestUtils.fileSystemCreateFileRequestDto());
+    }
+
+    @Test
+    void changeFileDirectorySuccess() {
+        FileSystemChangeFileDirectoryResponseDto expected = IntegrationTestUtils.fileSystemChangeFileDirectoryResponseDto();
+
+        when(client.changeFileDirectory(any())).thenReturn(ResponseEntity.ok(expected));
+
+        FileSystemChangeFileDirectoryResponseDto actual = service.changeFileDirectory(IntegrationTestUtils.fileSystemChangeFileDirectoryRequestDto());
+
+        assertEquals(expected, actual);
+
+        verify(client).changeFileDirectory(IntegrationTestUtils.fileSystemChangeFileDirectoryRequestDto());
     }
 }

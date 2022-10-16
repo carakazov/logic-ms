@@ -1,9 +1,11 @@
 package notes.project.logic.service.api;
 
+import java.util.Optional;
 import javax.persistence.NoResultException;
 
 import io.swagger.annotations.Api;
 import notes.project.logic.dto.api.CreateNoteResponseDto;
+import notes.project.logic.dto.api.MoveNoteResponseDto;
 import notes.project.logic.repository.NoteRepository;
 import notes.project.logic.service.api.impl.NoteServiceImpl;
 import notes.project.logic.service.integration.http.FileSystemRestService;
@@ -11,6 +13,7 @@ import notes.project.logic.utils.ApiUtils;
 import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.DbUtils;
 import notes.project.logic.utils.IntegrationTestUtils;
+import notes.project.logic.utils.mapper.ChangeDirectoryMapper;
 import notes.project.logic.utils.mapper.CreateFileMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +52,8 @@ class NoteServiceImplTest {
             directoryService,
             authHelper,
             Mappers.getMapper(CreateFileMapper.class),
-            fileSystemRestService
+            fileSystemRestService,
+            Mappers.getMapper(ChangeDirectoryMapper.class)
         );
     }
 
@@ -72,5 +76,22 @@ class NoteServiceImplTest {
         verify(clientService).findByExternalId(CLIENT_EXTERNAL_ID);
         verify(directoryService).findDirectoryByExternalId(DIRECTORY_EXTERNAL_ID);
         verify(repository).save(DbUtils.note().setId(null));
+    }
+
+    @Test
+    void moveDirectorySuccess() {
+        MoveNoteResponseDto expected = ApiUtils.moveNoteResponseDto();
+
+        when(fileSystemRestService.changeFileDirectory(any())).thenReturn(IntegrationTestUtils.fileSystemChangeFileDirectoryResponseDto());
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(DbUtils.note()));
+        when(directoryService.findDirectoryByExternalId(any())).thenReturn(DbUtils.alternateDirectory());
+
+        MoveNoteResponseDto actual = service.moveNote(ApiUtils.moveNoteRequestDto());
+
+        assertEquals(expected, actual);
+
+        verify(fileSystemRestService).changeFileDirectory(IntegrationTestUtils.fileSystemChangeFileDirectoryRequestDto());
+        verify(repository).findByExternalId(NOTE_EXTERNAL_ID);
+        verify(directoryService).findDirectoryByExternalId(DIRECTORY_ALTERNATE_EXTERNAL_ID);
     }
 }
