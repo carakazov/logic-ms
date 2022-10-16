@@ -8,4 +8,6 @@ public interface FileSystemRestService {
     FileSystemCreateDirectoryResponseDto createDirectory(FileSystemCreateDirectoryRequestDto request);
 
     FileSystemCreateFileResponseDto createFile(FileSystemCreateFileRequestDto request);
+
+    FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request);
 }

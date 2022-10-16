@@ -50,4 +50,16 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         checkResponse(response);
         return response.getBody();
     }
+
+    @Override
+    public FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request) {
+        ResponseEntity<FileSystemChangeFileDirectoryResponseDto> response;
+        try {
+            response = client.changeFileDirectory(request);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+        return response.getBody();
+    }
 }

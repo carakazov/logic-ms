@@ -10,6 +10,12 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class DbUtils {
+    public static Directory alternateDirectory() {
+        return directory()
+            .setId(ID_2)
+            .setExternalId(DIRECTORY_ALTERNATE_EXTERNAL_ID);
+    }
+
     public static Note note() {
         return new Note()
             .setId(ID)
