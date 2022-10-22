@@ -1,8 +1,9 @@
-package notes.project.logic.validation;
+package notes.project.logic.validation.impl;
 
 import java.util.Objects;
 
 import notes.project.logic.model.AccessMode;
+import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.UpdateNoteValidationDto;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;

@@ -17,6 +17,7 @@ import notes.project.logic.utils.mapper.CreateFileMapper;
 import notes.project.logic.utils.mapper.NoteResponseMapper;
 import notes.project.logic.utils.mapper.UpdateNoteMapper;
 import notes.project.logic.validation.Validator;
+import notes.project.logic.validation.dto.CreateNoteValidationDto;
 import notes.project.logic.validation.dto.ReadNoteValidationDto;
 import notes.project.logic.validation.dto.UpdateNoteValidationDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +52,8 @@ class NoteServiceImplTest {
     private AccessService accessService;
     @Mock
     private Validator<UpdateNoteValidationDto> updateNoteValidator;
+    @Mock
+    private Validator<CreateNoteValidationDto> createNoteValidator;
 
     private NoteService service;
 
@@ -68,7 +71,8 @@ class NoteServiceImplTest {
             readNoteValidator,
             accessService,
             updateNoteValidator,
-            Mappers.getMapper(UpdateNoteMapper.class)
+            Mappers.getMapper(UpdateNoteMapper.class),
+            createNoteValidator
         );
     }
 
