@@ -15,14 +15,17 @@ import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.ChangeDirectoryMapper;
 import notes.project.logic.utils.mapper.CreateFileMapper;
 import notes.project.logic.utils.mapper.NoteResponseMapper;
+import notes.project.logic.utils.mapper.UpdateNoteMapper;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.ReadNoteValidationDto;
+import notes.project.logic.validation.dto.UpdateNoteValidationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
 
 import static notes.project.logic.utils.TestDataConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,6 +49,8 @@ class NoteServiceImplTest {
     private Validator<ReadNoteValidationDto> readNoteValidator;
     @Mock
     private AccessService accessService;
+    @Mock
+    private Validator<UpdateNoteValidationDto> updateNoteValidator;
 
     private NoteService service;
 
@@ -61,7 +66,9 @@ class NoteServiceImplTest {
             Mappers.getMapper(ChangeDirectoryMapper.class),
             TestUtils.getComplexMapper(NoteResponseMapper.class),
             readNoteValidator,
-            accessService
+            accessService,
+            updateNoteValidator,
+            Mappers.getMapper(UpdateNoteMapper.class)
         );
     }
 
@@ -130,4 +137,24 @@ class NoteServiceImplTest {
         verify(fileSystemRestService).readFile(NOTE_EXTERNAL_ID);
         verify(accessService).getAccessOfClientToNote(client, note);
     }
+
+    @Test
+    void updateNoteSuccess() {
+        Note note = DbUtils.note();
+        Client client = DbUtils.client();
+        Access access = DbUtils.access();
+
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(note));
+        when(authHelper.getAuthorizedClientId()).thenReturn(CLIENT_EXTERNAL_ID);
+        when(clientService.findByExternalId(any())).thenReturn(client);
+        when(accessService.getAccessOfClientToNote(any(), any())).thenReturn(access);
+
+        service.updateNote(NOTE_EXTERNAL_ID, ApiUtils.updateNoteRequestDto());
+
+        verify(repository).findByExternalId(NOTE_EXTERNAL_ID);
+        verify(authHelper).getAuthorizedClientId();
+        verify(clientService).findByExternalId(CLIENT_EXTERNAL_ID);
+        verify(accessService).getAccessOfClientToNote(client, note);
+    }
+
 }

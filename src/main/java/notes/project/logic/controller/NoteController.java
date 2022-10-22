@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.*;
 import notes.project.logic.service.api.NoteService;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,5 +38,15 @@ public class NoteController {
     @Secured("ROLE_USER")
     public NoteResponseDto readNote(@PathVariable(name = "externalId")@ApiParam(name = "Внешний ID записки") UUID externalId)  {
         return noteService.readNote(externalId);
+    }
+
+    @PutMapping("/{externalId}")
+    @ApiOperation(value = "Обновление записки")
+    @Secured("ROLE_USER")
+    public void updateNote(
+        @PathVariable(name = "externalId") @ApiParam(name = "Внешний ID записки") UUID externalId,
+        @RequestBody UpdateNoteRequestDto request)
+    {
+        noteService.updateNote(externalId, request);
     }
 }

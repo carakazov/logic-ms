@@ -3,13 +3,13 @@ package notes.project.logic.service.integration.http.impl;
 import java.util.UUID;
 
 import feign.FeignException;
-import liquibase.pro.packaged.P;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.service.integration.http.AbstractRestService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.service.integration.http.client.FileSystemFeignClient;
 import notes.project.logic.utils.cache.CacheConfigValue;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -78,5 +78,17 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         }
         checkResponse(response);
         return response.getBody();
+    }
+
+    @Override
+    @CacheEvict(value = CacheConfigValue.NOTE_LIST, key = CacheConfigValue.EXTERNAL_ID)
+    public void updateFile(UUID externalId, FileSystemUpdateFileRequestDto request) {
+        ResponseEntity<Void> response;
+        try {
+            response = client.updateFile(externalId, request);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
     }
 }

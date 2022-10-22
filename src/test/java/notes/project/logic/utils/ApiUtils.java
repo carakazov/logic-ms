@@ -12,11 +12,21 @@ import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.model.AccessMode;
 import notes.project.logic.validation.dto.ReadNoteValidationDto;
+import notes.project.logic.validation.dto.UpdateNoteValidationDto;
 
 import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static UpdateNoteValidationDto updateNoteValidationDto() {
+        return new UpdateNoteValidationDto(DbUtils.access());
+    }
+
+    public static UpdateNoteRequestDto updateNoteRequestDto() {
+        return new UpdateNoteRequestDto()
+            .setContent(NEW_NOTE_CONTENT);
+    }
+
     public static NoteResponseDto noteResponseDto() {
         return new NoteResponseDto()
             .setNote(noteDto())

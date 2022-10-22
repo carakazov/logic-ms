@@ -13,6 +13,11 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemUpdateFileRequestDto fileSystemUpdateFileRequestDto() {
+        return new FileSystemUpdateFileRequestDto()
+            .setContent(NEW_NOTE_CONTENT);
+    }
+
     public static FileSystemFileResponseDto fileSystemFileResponseDto() {
         return new FileSystemFileResponseDto()
             .setContent(NOTE_CONTENT)
