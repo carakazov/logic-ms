@@ -1,13 +1,13 @@
 package notes.project.logic.service.integration.http.client;
 
+import java.util.UUID;
+
 import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.oauth.TokenSource;
 import notes.project.logic.utils.token.TokenRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(value = "${application.externalServices.fileSystem.name}", url = "${application.externalServices.fileSystem.url}")
 public interface FileSystemFeignClient {
@@ -26,4 +26,8 @@ public interface FileSystemFeignClient {
     @PutMapping("/file")
     @TokenRequest
     ResponseEntity<FileSystemChangeFileDirectoryResponseDto> changeFileDirectory(@RequestBody FileSystemChangeFileDirectoryRequestDto request);
+
+    @GetMapping("/file/{id}")
+    @TokenRequest
+    ResponseEntity<FileSystemFileResponseDto> readFile(@PathVariable(name = "id") UUID externalId);
 }

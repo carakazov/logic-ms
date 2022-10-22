@@ -34,6 +34,7 @@ public class WebControllerAdvice {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception) {
+        errorHelper.from(exception);
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 

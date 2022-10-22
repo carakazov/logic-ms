@@ -2,6 +2,7 @@ package notes.project.logic.config;
 
 import java.util.TimeZone;
 
+import javax.inject.Inject;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
@@ -14,6 +15,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dto.integration.kafka.RestorePasswordRequestKafkaDto;
 import dto.integration.kafka.ServiceClientAdditionalInfoRecordKafkaDto;
 import dto.integration.kafka.ServiceClientAdditionalInfoKafkaDto;
+import notes.project.logic.utils.AuthHelper;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

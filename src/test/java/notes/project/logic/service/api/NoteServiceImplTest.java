@@ -1,23 +1,24 @@
 package notes.project.logic.service.api;
 
 import java.util.Optional;
-import javax.persistence.NoResultException;
 
-import io.swagger.annotations.Api;
 import notes.project.logic.dto.api.CreateNoteResponseDto;
 import notes.project.logic.dto.api.MoveNoteResponseDto;
+import notes.project.logic.dto.api.NoteResponseDto;
+import notes.project.logic.model.Access;
+import notes.project.logic.model.Client;
+import notes.project.logic.model.Note;
 import notes.project.logic.repository.NoteRepository;
 import notes.project.logic.service.api.impl.NoteServiceImpl;
 import notes.project.logic.service.integration.http.FileSystemRestService;
-import notes.project.logic.utils.ApiUtils;
-import notes.project.logic.utils.AuthHelper;
-import notes.project.logic.utils.DbUtils;
-import notes.project.logic.utils.IntegrationTestUtils;
+import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.ChangeDirectoryMapper;
 import notes.project.logic.utils.mapper.CreateFileMapper;
+import notes.project.logic.utils.mapper.NoteResponseMapper;
+import notes.project.logic.validation.Validator;
+import notes.project.logic.validation.dto.ReadNoteValidationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
@@ -41,6 +42,10 @@ class NoteServiceImplTest {
     private AuthHelper authHelper;
     @Mock
     private FileSystemRestService fileSystemRestService;
+    @Mock
+    private Validator<ReadNoteValidationDto> readNoteValidator;
+    @Mock
+    private AccessService accessService;
 
     private NoteService service;
 
@@ -53,7 +58,10 @@ class NoteServiceImplTest {
             authHelper,
             Mappers.getMapper(CreateFileMapper.class),
             fileSystemRestService,
-            Mappers.getMapper(ChangeDirectoryMapper.class)
+            Mappers.getMapper(ChangeDirectoryMapper.class),
+            TestUtils.getComplexMapper(NoteResponseMapper.class),
+            readNoteValidator,
+            accessService
         );
     }
 
@@ -93,5 +101,33 @@ class NoteServiceImplTest {
         verify(fileSystemRestService).changeFileDirectory(IntegrationTestUtils.fileSystemChangeFileDirectoryRequestDto());
         verify(repository).findByExternalId(NOTE_EXTERNAL_ID);
         verify(directoryService).findDirectoryByExternalId(DIRECTORY_ALTERNATE_EXTERNAL_ID);
+    }
+
+    @Test
+    void readNoteSuccess() {
+        NoteResponseDto expected = ApiUtils.noteResponseDto();
+
+
+        Note note = DbUtils.note();
+        Access access = DbUtils.access();
+        Client client = DbUtils.client();
+
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(note));
+        when(authHelper.getAuthorizedClientId()).thenReturn(CLIENT_EXTERNAL_ID);
+        when(clientService.findByExternalId(any())).thenReturn(client);
+        when(accessService.clientHasAccessToNote(any(), any())).thenReturn(Boolean.TRUE);
+        when(fileSystemRestService.readFile(any())).thenReturn(IntegrationTestUtils.fileSystemFileResponseDto());
+        when(accessService.getAccessOfClientToNote(any(), any())).thenReturn(access);
+
+        NoteResponseDto actual = service.readNote(NOTE_EXTERNAL_ID);
+
+        assertEquals(expected, actual);
+
+        verify(repository).findByExternalId(NOTE_EXTERNAL_ID);
+        verify(authHelper).getAuthorizedClientId();
+        verify(clientService).findByExternalId(CLIENT_EXTERNAL_ID);
+        verify(accessService).clientHasAccessToNote(client, note);
+        verify(fileSystemRestService).readFile(NOTE_EXTERNAL_ID);
+        verify(accessService).getAccessOfClientToNote(client, note);
     }
 }

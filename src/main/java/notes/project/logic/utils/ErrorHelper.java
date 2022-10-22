@@ -4,6 +4,7 @@ import notes.project.logic.dto.ErrorDto;
 import notes.project.logic.dto.ValidationErrorDto;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.exception.ValidationException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 public interface ErrorHelper {
@@ -11,4 +12,6 @@ public interface ErrorHelper {
     ErrorDto from(Exception exception);
     ErrorDto from(MethodArgumentNotValidException exception);
     ErrorDto from(NotFoundException exception);
+
+    void from(AccessDeniedException exception);
 }

@@ -1,5 +1,7 @@
 package notes.project.logic.service.integration.http;
 
+import java.util.UUID;
+
 import notes.project.logic.dto.integration.filesystem.*;
 
 public interface FileSystemRestService {
@@ -10,4 +12,6 @@ public interface FileSystemRestService {
     FileSystemCreateFileResponseDto createFile(FileSystemCreateFileRequestDto request);
 
     FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request);
+
+    FileSystemFileResponseDto readFile(UUID externalId);
 }

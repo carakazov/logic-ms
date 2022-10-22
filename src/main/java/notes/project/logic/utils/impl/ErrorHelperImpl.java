@@ -10,6 +10,7 @@ import notes.project.logic.dto.ValidationErrorDto;
 import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -59,6 +60,11 @@ public class ErrorHelperImpl implements ErrorHelper {
         errorDto.setCode(ExceptionCode.NOT_FOUND.getCode());
         errorDto.setMessage(getMessageByCode(ExceptionCode.NOT_FOUND));
         return errorDto;
+    }
+
+    @Override
+    public void from(AccessDeniedException exception) {
+        logException(exception);
     }
 
     private String getMessageByCode(ExceptionCode code) {
