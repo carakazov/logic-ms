@@ -23,6 +23,7 @@ import notes.project.logic.utils.mapper.NoteResponseMapper;
 import notes.project.logic.utils.mapper.UpdateNoteMapper;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.CreateNoteValidationDto;
+import notes.project.logic.validation.dto.DeleteNoteValidationDto;
 import notes.project.logic.validation.dto.ReadNoteValidationDto;
 import notes.project.logic.validation.dto.UpdateNoteValidationDto;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ public class NoteServiceImpl implements NoteService {
     private final Validator<UpdateNoteValidationDto> updateNoteValidator;
     private final UpdateNoteMapper updateNoteMapper;
     private final Validator<CreateNoteValidationDto> createNoteValidator;
+    private final Validator<DeleteNoteValidationDto> deleteNoteValidator;
 
     @Override
     @Transactional
@@ -97,5 +99,19 @@ public class NoteServiceImpl implements NoteService {
         Access access = accessService.getAccessOfClientToNote(client, note);
         updateNoteValidator.validate(new UpdateNoteValidationDto(access));
         fileSystemRestService.updateFile(externalId, updateNoteMapper.to(request));
+    }
+
+    @Override
+    @Transactional
+    public void deleteNote(UUID externalId) {
+        Note note = findByExternalId(externalId);
+        deleteNoteValidator.validate(new DeleteNoteValidationDto(
+            note,
+            authHelper.getAuthorizedClientId()
+        ));
+
+        fileSystemRestService.deleteFile(externalId);
+
+        note.setDeleted(Boolean.TRUE);
     }
 }

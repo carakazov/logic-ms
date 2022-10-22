@@ -34,4 +34,8 @@ public interface FileSystemFeignClient {
     @TokenRequest
     ResponseEntity<Void> updateFile(@PathVariable(name = "id") UUID externalId, @RequestBody
         FileSystemUpdateFileRequestDto request);
+
+    @DeleteMapping("/file/{id}")
+    @TokenRequest
+    ResponseEntity<Void> deleteFile(@PathVariable(name = "id") UUID externalId);
 }

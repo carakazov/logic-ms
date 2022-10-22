@@ -16,4 +16,6 @@ public interface FileSystemRestService {
     FileSystemFileResponseDto readFile(UUID externalId);
 
     void updateFile(UUID externalId, FileSystemUpdateFileRequestDto request);
+
+    void deleteFile(UUID externalId);
 }

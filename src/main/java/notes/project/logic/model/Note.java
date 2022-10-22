@@ -24,4 +24,6 @@ public class Note {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
+
+    private Boolean deleted;
 }
