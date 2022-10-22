@@ -27,14 +27,16 @@ public class DbUtils {
             .setId(ID)
             .setExternalId(NOTE_EXTERNAL_ID)
             .setClient(client())
-            .setDirectory(directory());
+            .setDirectory(directory())
+            .setDeleted(Boolean.FALSE);
     }
 
     public static Directory directory() {
         return new Directory()
             .setId(ID)
             .setExternalId(DIRECTORY_EXTERNAL_ID)
-            .setClient(client());
+            .setClient(client())
+            .setDeleted(Boolean.FALSE);
     }
 
     public static Client client() {

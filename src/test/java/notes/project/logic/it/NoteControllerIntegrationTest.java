@@ -9,6 +9,7 @@ import notes.project.logic.model.Note;
 import notes.project.logic.utils.DbUtils;
 import notes.project.logic.utils.IntegrationTestUtils;
 import notes.project.logic.utils.TestUtils;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyFactorySpi;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,8 +29,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -163,5 +163,29 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtils.getClasspathResource("/api/UpdateNoteRequest.json")))
             .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteNoteSuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubKeycloakToken();
+
+        testEntityManager.merge(DbUtils.client());
+        testEntityManager.merge(DbUtils.directory());
+        testEntityManager.merge(DbUtils.note());
+        testEntityManager.merge(DbUtils.access());
+
+        stubFor(delete(urlMatching("/file/86c16469-229d-4fb6-a90e-a3a0f67dca8a"))
+            .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a"))
+            .andExpect(status().isOk());
+
+        Note note = testEntityManager.getEntityManager().createQuery(
+            "select note from notes note",
+            Note.class
+        ).getSingleResult();
+
+        assertTrue(note.getDeleted());
     }
 }

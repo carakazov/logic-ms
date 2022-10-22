@@ -12,6 +12,7 @@ import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.model.AccessMode;
 import notes.project.logic.validation.dto.CreateNoteValidationDto;
+import notes.project.logic.validation.dto.DeleteNoteValidationDto;
 import notes.project.logic.validation.dto.ReadNoteValidationDto;
 import notes.project.logic.validation.dto.UpdateNoteValidationDto;
 
@@ -19,6 +20,12 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static DeleteNoteValidationDto deleteNoteValidationDto() {
+        return new DeleteNoteValidationDto()
+            .setNote(DbUtils.note())
+            .setClientExternalId(CLIENT_EXTERNAL_ID);
+    }
+
     public static CreateNoteValidationDto createNoteValidationDto() {
         return new CreateNoteValidationDto()
             .setDirectory(DbUtils.directory())

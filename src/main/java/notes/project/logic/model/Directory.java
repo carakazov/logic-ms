@@ -1,5 +1,6 @@
 package notes.project.logic.model;
 
+import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
 
@@ -20,4 +21,9 @@ public class Directory {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
+
+    @OneToMany(mappedBy = "directory", fetch = FetchType.LAZY)
+    private List<Note> notes;
+
+    private Boolean deleted;
 }

@@ -91,4 +91,16 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         }
         checkResponse(response);
     }
+
+    @Override
+    @CacheEvict(value = CacheConfigValue.NOTE_LIST, key = CacheConfigValue.EXTERNAL_ID)
+    public void deleteFile(UUID externalId) {
+        ResponseEntity<Void> response;
+        try {
+            response = client.deleteFile(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+    }
 }

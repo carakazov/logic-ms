@@ -49,4 +49,11 @@ public class NoteController {
     {
         noteService.updateNote(externalId, request);
     }
+
+    @DeleteMapping("/{externalId}")
+    @ApiOperation(value = "Удаление записки")
+    @Secured("ROLE_USER")
+    public void deleteNote(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID записки") UUID externalId) {
+        noteService.deleteNote(externalId);
+    }
 }

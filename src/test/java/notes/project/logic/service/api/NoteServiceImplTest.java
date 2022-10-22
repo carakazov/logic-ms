@@ -2,6 +2,8 @@ package notes.project.logic.service.api;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import notes.project.logic.dto.api.CreateNoteResponseDto;
 import notes.project.logic.dto.api.MoveNoteResponseDto;
 import notes.project.logic.dto.api.NoteResponseDto;
@@ -18,6 +20,7 @@ import notes.project.logic.utils.mapper.NoteResponseMapper;
 import notes.project.logic.utils.mapper.UpdateNoteMapper;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.CreateNoteValidationDto;
+import notes.project.logic.validation.dto.DeleteNoteValidationDto;
 import notes.project.logic.validation.dto.ReadNoteValidationDto;
 import notes.project.logic.validation.dto.UpdateNoteValidationDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +57,8 @@ class NoteServiceImplTest {
     private Validator<UpdateNoteValidationDto> updateNoteValidator;
     @Mock
     private Validator<CreateNoteValidationDto> createNoteValidator;
+    @Mock
+    private Validator<DeleteNoteValidationDto> deleteNoteValidator;
 
     private NoteService service;
 
@@ -72,7 +77,8 @@ class NoteServiceImplTest {
             accessService,
             updateNoteValidator,
             Mappers.getMapper(UpdateNoteMapper.class),
-            createNoteValidator
+            createNoteValidator,
+            deleteNoteValidator
         );
     }
 
@@ -161,4 +167,12 @@ class NoteServiceImplTest {
         verify(accessService).getAccessOfClientToNote(client, note);
     }
 
+    @Test
+    void deleteNoteSuccess() {
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(DbUtils.note()));
+
+        service.deleteNote(NOTE_EXTERNAL_ID);
+
+        verify(repository).findByExternalId(NOTE_EXTERNAL_ID);
+    }
 }
