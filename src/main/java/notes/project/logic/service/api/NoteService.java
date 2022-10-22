@@ -13,4 +13,6 @@ public interface NoteService {
     Note findByExternalId(UUID externalId);
 
     NoteResponseDto readNote(UUID externalId);
+
+    void updateNote(UUID externalId, UpdateNoteRequestDto request);
 }

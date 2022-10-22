@@ -3,7 +3,6 @@ package notes.project.logic.service.integration.http.client;
 import java.util.UUID;
 
 import notes.project.logic.dto.integration.filesystem.*;
-import notes.project.logic.oauth.TokenSource;
 import notes.project.logic.utils.token.TokenRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -30,4 +29,9 @@ public interface FileSystemFeignClient {
     @GetMapping("/file/{id}")
     @TokenRequest
     ResponseEntity<FileSystemFileResponseDto> readFile(@PathVariable(name = "id") UUID externalId);
+
+    @PutMapping("/file/{id}")
+    @TokenRequest
+    ResponseEntity<Void> updateFile(@PathVariable(name = "id") UUID externalId, @RequestBody
+        FileSystemUpdateFileRequestDto request);
 }

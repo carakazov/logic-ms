@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @Transactional
@@ -133,6 +134,7 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
             .willReturn(aResponse()
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .withBody(TestUtils.getClasspathResource("/integration/filesystem/ReadFileResponse.json"))
+                .withStatus(HttpStatus.OK.value())
             )
         );
 
@@ -142,5 +144,24 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
             .andReturn().getResponse().getContentAsString();
 
         JSONAssert.assertEquals(expected, actual, true);
+    }
+
+    @Test
+    void updateNoteSuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubKeycloakToken();
+
+        testEntityManager.merge(DbUtils.client());
+        testEntityManager.merge(DbUtils.directory());
+        testEntityManager.merge(DbUtils.note());
+        testEntityManager.merge(DbUtils.access());
+
+        stubFor(put(urlMatching("/file/86c16469-229d-4fb6-a90e-a3a0f67dca8a"))
+            .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtils.getClasspathResource("/api/UpdateNoteRequest.json")))
+            .andExpect(status().isOk());
     }
 }

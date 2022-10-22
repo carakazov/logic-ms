@@ -14,4 +14,6 @@ public interface FileSystemRestService {
     FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request);
 
     FileSystemFileResponseDto readFile(UUID externalId);
+
+    void updateFile(UUID externalId, FileSystemUpdateFileRequestDto request);
 }

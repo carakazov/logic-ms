@@ -9,10 +9,7 @@ import notes.project.logic.dto.integration.filesystem.FileSystemChangeFileDirect
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateFileResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemFileResponseDto;
 import notes.project.logic.exception.NotFoundException;
-import notes.project.logic.model.AccessMode;
-import notes.project.logic.model.Client;
-import notes.project.logic.model.Directory;
-import notes.project.logic.model.Note;
+import notes.project.logic.model.*;
 import notes.project.logic.repository.NoteRepository;
 import notes.project.logic.service.api.AccessService;
 import notes.project.logic.service.api.ClientService;
@@ -23,8 +20,10 @@ import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.mapper.ChangeDirectoryMapper;
 import notes.project.logic.utils.mapper.CreateFileMapper;
 import notes.project.logic.utils.mapper.NoteResponseMapper;
+import notes.project.logic.utils.mapper.UpdateNoteMapper;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.ReadNoteValidationDto;
+import notes.project.logic.validation.dto.UpdateNoteValidationDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,6 +39,8 @@ public class NoteServiceImpl implements NoteService {
     private final NoteResponseMapper noteResponseMapper;
     private final Validator<ReadNoteValidationDto> readNoteValidator;
     private final AccessService accessService;
+    private final Validator<UpdateNoteValidationDto> updateNoteValidator;
+    private final UpdateNoteMapper updateNoteMapper;
 
     @Override
     @Transactional
@@ -84,5 +85,14 @@ public class NoteServiceImpl implements NoteService {
         ));
         FileSystemFileResponseDto fileSystemResponse = fileSystemRestService.readFile(externalId);
         return noteResponseMapper.to(fileSystemResponse, accessService.getAccessOfClientToNote(client, note));
+    }
+
+    @Override
+    public void updateNote(UUID externalId, UpdateNoteRequestDto request) {
+        Note note = findByExternalId(externalId);
+        Client client = clientService.findByExternalId(authHelper.getAuthorizedClientId());
+        Access access = accessService.getAccessOfClientToNote(client, note);
+        updateNoteValidator.validate(new UpdateNoteValidationDto(access));
+        fileSystemRestService.updateFile(externalId, updateNoteMapper.to(request));
     }
 }
