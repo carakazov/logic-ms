@@ -22,6 +22,7 @@ import notes.project.logic.utils.mapper.CreateFileMapper;
 import notes.project.logic.utils.mapper.NoteResponseMapper;
 import notes.project.logic.utils.mapper.UpdateNoteMapper;
 import notes.project.logic.validation.Validator;
+import notes.project.logic.validation.dto.CreateNoteValidationDto;
 import notes.project.logic.validation.dto.ReadNoteValidationDto;
 import notes.project.logic.validation.dto.UpdateNoteValidationDto;
 import org.springframework.stereotype.Service;
@@ -41,15 +42,17 @@ public class NoteServiceImpl implements NoteService {
     private final AccessService accessService;
     private final Validator<UpdateNoteValidationDto> updateNoteValidator;
     private final UpdateNoteMapper updateNoteMapper;
+    private final Validator<CreateNoteValidationDto> createNoteValidator;
 
     @Override
     @Transactional
     public CreateNoteResponseDto createNote(CreateNoteRequestDto request) {
         UUID clientId = authHelper.getAuthorizedClientId();
+        Directory directory = directoryService.findDirectoryByExternalId(request.getDirectoryExternalId());
+        createNoteValidator.validate(new CreateNoteValidationDto(directory, clientId));
         FileSystemCreateFileResponseDto fileSystemResponse = fileSystemRestService.createFile(createFileMapper.toRequest(request));
         CreateNoteResponseDto response = createFileMapper.toResponse(fileSystemResponse);
         Client client = clientService.findByExternalId(clientId);
-        Directory directory = directoryService.findDirectoryByExternalId(request.getDirectoryExternalId());
         Note note = createFileMapper.toNote(response, client, directory);
         repository.save(note);
         accessService.addAccess(note, client, AccessMode.READ_WRITE);
