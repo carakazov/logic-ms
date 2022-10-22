@@ -1,5 +1,7 @@
 package notes.project.logic.service.integration.http.impl;
 
+import java.util.UUID;
+
 import feign.FeignException;
 import liquibase.pro.packaged.P;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +9,8 @@ import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.service.integration.http.AbstractRestService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.service.integration.http.client.FileSystemFeignClient;
+import notes.project.logic.utils.cache.CacheConfigValue;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +60,19 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         ResponseEntity<FileSystemChangeFileDirectoryResponseDto> response;
         try {
             response = client.changeFileDirectory(request);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+        return response.getBody();
+    }
+
+    @Override
+    @Cacheable(value = CacheConfigValue.NOTE_LIST, key = CacheConfigValue.EXTERNAL_ID)
+    public FileSystemFileResponseDto readFile(UUID externalId) {
+        ResponseEntity<FileSystemFileResponseDto> response;
+        try {
+            response = client.readFile(externalId);
         } catch(FeignException exception) {
             throw handleFeignException(exception);
         }

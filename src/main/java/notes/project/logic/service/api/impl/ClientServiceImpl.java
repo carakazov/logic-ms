@@ -15,6 +15,7 @@ import notes.project.logic.repository.ClientRepository;
 import notes.project.logic.service.api.ClientService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.service.integration.http.UserDataSystemRestService;
+import notes.project.logic.utils.cache.CacheConfigValue;
 import notes.project.logic.utils.mapper.CreateClientMapper;
 import notes.project.logic.utils.mapper.PersonalInfoMapper;
 import org.springframework.cache.annotation.Cacheable;
@@ -42,7 +43,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    @Cacheable(value = "personalInfo", key = "#externalId")
+    @Cacheable(value = CacheConfigValue.PERSONAL_INFO, key = CacheConfigValue.EXTERNAL_ID)
     public PersonalInfoDto getPersonalInfo(UUID externalId) {
         Client client = findByExternalId(externalId);
         UserDataSystemPersonalInfoDto personalInfo = userDataSystemRestService.getPersonalInfo(client.getExternalId());

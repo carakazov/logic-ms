@@ -13,6 +13,13 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemFileResponseDto fileSystemFileResponseDto() {
+        return new FileSystemFileResponseDto()
+            .setContent(NOTE_CONTENT)
+            .setCreationDate(NOTE_CREATED_DATE)
+            .setTitle(NOTE_TITLE);
+    }
+
     public static FileSystemChangeFileDirectoryRequestDto fileSystemChangeFileDirectoryRequestDto(){
         return new FileSystemChangeFileDirectoryRequestDto()
             .setCreatedFileExternalId(NOTE_EXTERNAL_ID)

@@ -2,14 +2,20 @@ package notes.project.logic.utils;
 
 import liquibase.pro.packaged.N;
 import lombok.experimental.UtilityClass;
-import notes.project.logic.model.Client;
-import notes.project.logic.model.Directory;
-import notes.project.logic.model.Note;
+import notes.project.logic.model.*;
 
 import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class DbUtils {
+    public static Access access() {
+        return new Access()
+            .setId(ID)
+            .setClient(client())
+            .setNote(note())
+            .setAccessMode(AccessMode.READ_WRITE);
+    }
+
     public static Directory alternateDirectory() {
         return directory()
             .setId(ID_2)

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.common.DataValidationException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.http.HttpHeaders;
@@ -118,4 +119,28 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
         assertEquals(DbUtils.alternateDirectory(), note.getDirectory());
     }
 
+    @Test
+    void readNoteSuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubKeycloakToken();
+
+        testEntityManager.merge(DbUtils.client());
+        testEntityManager.merge(DbUtils.directory());
+        testEntityManager.merge(DbUtils.note());
+        testEntityManager.merge(DbUtils.access());
+
+        stubFor(get(urlMatching("/file/86c16469-229d-4fb6-a90e-a3a0f67dca8a"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/filesystem/ReadFileResponse.json"))
+            )
+        );
+
+        String expected = TestUtils.getClasspathResource("/api/ReadNoteResponse.json");
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a"))
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
 }

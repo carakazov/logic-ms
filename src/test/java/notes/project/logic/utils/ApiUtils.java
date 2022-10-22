@@ -10,11 +10,32 @@ import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
 import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
+import notes.project.logic.model.AccessMode;
+import notes.project.logic.validation.dto.ReadNoteValidationDto;
 
 import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static NoteResponseDto noteResponseDto() {
+        return new NoteResponseDto()
+            .setNote(noteDto())
+            .setAccessMode(AccessMode.READ_WRITE);
+    }
+
+    public static NoteDto noteDto() {
+        return new NoteDto()
+            .setContent(NOTE_CONTENT)
+            .setCreationDate(NOTE_CREATED_DATE)
+            .setTitle(NOTE_TITLE);
+    }
+
+    public static ReadNoteValidationDto readNoteValidationDto() {
+        return new ReadNoteValidationDto()
+            .setNote(DbUtils.note())
+            .setClientExternalId(CLIENT_EXTERNAL_ID);
+    }
+
     public static MoveNoteResponseDto moveNoteResponseDto() {
         return new MoveNoteResponseDto()
             .setCreatedFileExternalId(NOTE_EXTERNAL_ID)
