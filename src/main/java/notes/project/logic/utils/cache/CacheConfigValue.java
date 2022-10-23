@@ -4,4 +4,5 @@ public interface CacheConfigValue {
     String EXTERNAL_ID = "#externalId";
     String PERSONAL_INFO = "personalInfo";
     String NOTE_LIST = "notes";
+    String ARCHIVE_HISTORY_LIST = "archiveList";
 }

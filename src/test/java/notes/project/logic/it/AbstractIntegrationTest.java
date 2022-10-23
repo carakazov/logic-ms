@@ -49,6 +49,7 @@ public abstract class AbstractIntegrationTest {
     private static final String EXTERNAL_ID_CLAIM = "externalId";
 
     protected static final String ROLE_USER = "ROLE_USER";
+    protected static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     @Inject
     protected ApplicationProperties applicationProperties;
@@ -65,7 +66,7 @@ public abstract class AbstractIntegrationTest {
             Map.of(HEADER_KEY, HEADER_VALUE),
             Map.of(EXTERNAL_ID_CLAIM, CLIENT_EXTERNAL_ID)
         );
-        Authentication authentication = new JwtAuthenticationToken(jwt, Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER)));
+        Authentication authentication = new JwtAuthenticationToken(jwt, Collections.singletonList(new SimpleGrantedAuthority(role)));
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

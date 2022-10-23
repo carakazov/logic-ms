@@ -188,4 +188,23 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
 
         assertTrue(note.getDeleted());
     }
+
+    @Test
+    void getNoteUpdateArchive() throws Exception {
+        setAuthentication(ROLE_ADMIN);
+        stubKeycloakToken();
+
+        stubFor(get(urlMatching("/file/86c16469-229d-4fb6-a90e-a3a0f67dca8a/archiveHistory"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/filesystem/FileArchiveHistory.json"))
+                .withStatus(HttpStatus.OK.value())));
+
+        String expected = TestUtils.getClasspathResource("/api/NoteArchiveResponse.json");
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a/archiveHistory"))
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
 }
