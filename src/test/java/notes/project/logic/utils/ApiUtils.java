@@ -1,10 +1,13 @@
 package notes.project.logic.utils;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import lombok.experimental.UtilityClass;
 import notes.project.logic.dto.*;
 import notes.project.logic.dto.api.*;
+import notes.project.logic.dto.integration.filesystem.FileSystemDeleteHistoryRecordDto;
+import notes.project.logic.dto.integration.filesystem.FileSystemDeleteHistoryResponseDto;
 import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.model.AccessMode;
@@ -17,6 +20,21 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+
+    public static DeleteHistoryResponseDto deleteHistoryResponseDto(String objectTitle, LocalDateTime cretedDate) {
+        return new DeleteHistoryResponseDto()
+            .setCreatedDate(cretedDate)
+            .setObjectTitle(objectTitle)
+            .setCurrentState(CURRENT_STATE)
+            .setHistory(Collections.singletonList(deleteHistoryRecordDto()));
+    }
+
+    public static DeleteHistoryRecordDto deleteHistoryRecordDto() {
+        return new DeleteHistoryRecordDto()
+            .setEvent(DELETE_HISTORY_EVENT)
+            .setEventDate(DELETE_HISTORY_EVENT_DATE);
+    }
+
     public static NoteHistoryResponseDto noteHistoryResponseDto() {
         return new NoteHistoryResponseDto()
             .setNote(noteHistoryDto())

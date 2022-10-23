@@ -63,4 +63,11 @@ public class NoteController {
     public NoteHistoryResponseDto getNoteArchiveHistory(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID записки") UUID exteranlId) {
         return noteService.getNoteArchiveHistory(exteranlId);
     }
+
+    @GetMapping("/{externalId}/deleteHistory")
+    @ApiOperation(value = "Получение истории удалений записки")
+    @Secured("ROLE_ADMIN")
+    public DeleteHistoryResponseDto getNoteDeleteHistory(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID записки") UUID externalId) {
+        return noteService.getNoteDeleteHistory(externalId);
+    }
 }

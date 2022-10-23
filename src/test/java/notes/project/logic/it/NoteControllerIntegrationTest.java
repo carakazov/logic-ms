@@ -29,6 +29,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static notes.project.logic.utils.TestDataConstants.NOTE_CREATED_DATE;
+import static notes.project.logic.utils.TestDataConstants.NOTE_TITLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -203,6 +205,31 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
         String expected = TestUtils.getClasspathResource("/api/NoteArchiveResponse.json");
 
         String actual = mockMvc.perform(MockMvcRequestBuilders.get("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a/archiveHistory"))
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
+
+    @Test
+    void getNoteDeleteHistorySuccess() throws Exception {
+        setAuthentication(ROLE_ADMIN);
+        stubKeycloakToken();
+
+        stubFor(get(urlMatching("/file/86c16469-229d-4fb6-a90e-a3a0f67dca8a/deleteHistory"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/filesystem/FileSystemDeleteHistoryResponse.json")
+                    .replace(CREATED_DATE_PLACEHOLDER, NOTE_CREATED_DATE.toString())
+                    .replace(OBJECT_TITLE_PLACEHOLDER, NOTE_TITLE))
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        String expected = TestUtils.getClasspathResource("/api/DeleteHistoryResponse.json")
+            .replace(CREATED_DATE_PLACEHOLDER, NOTE_CREATED_DATE.toString())
+            .replace(OBJECT_TITLE_PLACEHOLDER, NOTE_TITLE);
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a/deleteHistory"))
             .andReturn().getResponse().getContentAsString();
 
         JSONAssert.assertEquals(expected, actual, true);
