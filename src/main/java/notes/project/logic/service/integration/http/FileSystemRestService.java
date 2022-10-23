@@ -24,4 +24,6 @@ public interface FileSystemRestService {
     FileSystemDeleteHistoryResponseDto getFileDeleteHistory(UUID externalId);
 
     FileSystemReplacingHistoryResponseDto getFileReplacingHistory(UUID externalId);
+
+    FileSystemFileVersionDto getFileVersion(UUID externalId);
 }

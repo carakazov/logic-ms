@@ -50,4 +50,8 @@ public interface FileSystemFeignClient {
     @GetMapping("/file/{id}/replacingHistory")
     @TokenRequest
     ResponseEntity<FileSystemReplacingHistoryResponseDto> getFileReplacingHistory(@PathVariable(name = "id") UUID externalId);
+
+    @GetMapping("/file/version/{id}")
+    @TokenRequest
+    ResponseEntity<FileSystemFileVersionDto> getFileVersion(@PathVariable(name = "id") UUID externalId);
 }

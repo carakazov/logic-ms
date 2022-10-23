@@ -19,6 +19,11 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static NoteVersionResponseDto noteVersionResponseDto() {
+        return new NoteVersionResponseDto()
+            .setContent(NOTE_CONTENT);
+    }
+
     public static NoteReplacingHistoryResponseDto noteReplacingHistoryResponseDto() {
         return new NoteReplacingHistoryResponseDto()
             .setNote(noteReplacingHistoryDto())

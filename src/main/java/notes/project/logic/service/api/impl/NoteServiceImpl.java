@@ -43,6 +43,7 @@ public class NoteServiceImpl implements NoteService {
     private final NoteHistoryResponseMapper noteHistoryResponseMapper;
     private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
     private final ReplacingHistoryResponseMapper replacingHistoryResponseMapper;
+    private final NoteVersionMapper noteVersionMapper;
 
     @Override
     @Transactional
@@ -129,5 +130,11 @@ public class NoteServiceImpl implements NoteService {
     public NoteReplacingHistoryResponseDto getNoteReplacingHistory(UUID externalId) {
         FileSystemReplacingHistoryResponseDto fileSystemResponse = fileSystemRestService.getFileReplacingHistory(externalId);
         return replacingHistoryResponseMapper.to(fileSystemResponse);
+    }
+
+    @Override
+    public NoteVersionResponseDto getNoteVersion(UUID externalId) {
+        FileSystemFileVersionDto fileSystemResponse = fileSystemRestService.getFileVersion(externalId);
+        return noteVersionMapper.to(fileSystemResponse);
     }
 }
