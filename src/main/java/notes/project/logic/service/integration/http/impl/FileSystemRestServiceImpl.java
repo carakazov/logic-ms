@@ -57,6 +57,7 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     }
 
     @Override
+    @CacheEvict(value = CacheConfigValue.REPLACING_HISTORY)
     public FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request) {
         ResponseEntity<FileSystemChangeFileDirectoryResponseDto> response;
         try {
@@ -130,6 +131,19 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         ResponseEntity<FileSystemDeleteHistoryResponseDto> response;
         try {
             response = client.getFileDeleteHistory(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+        return response.getBody();
+    }
+
+    @Override
+    @Cacheable(value = CacheConfigValue.REPLACING_HISTORY, key = CacheConfigValue.EXTERNAL_ID)
+    public FileSystemReplacingHistoryResponseDto getFileReplacingHistory(UUID externalId) {
+        ResponseEntity<FileSystemReplacingHistoryResponseDto> response;
+        try {
+            response = client.getFileReplacingHistory(externalId);
         } catch(FeignException exception) {
             throw handleFeignException(exception);
         }

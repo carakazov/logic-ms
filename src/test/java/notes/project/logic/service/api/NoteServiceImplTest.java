@@ -76,7 +76,8 @@ class NoteServiceImplTest {
             createNoteValidator,
             deleteNoteValidator,
             TestUtils.getComplexMapper(NoteHistoryResponseMapper.class),
-            TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class)
+            TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class),
+            TestUtils.getComplexMapper(ReplacingHistoryResponseMapper.class)
         );
     }
 
@@ -198,5 +199,18 @@ class NoteServiceImplTest {
         assertEquals(expected, actual);
 
         verify(fileSystemRestService).getFileDeleteHistory(NOTE_EXTERNAL_ID);
+    }
+
+    @Test
+    void getReplacingHistorySuccess() {
+        NoteReplacingHistoryResponseDto expected = ApiUtils.noteReplacingHistoryResponseDto();
+
+        when(fileSystemRestService.getFileReplacingHistory(any())).thenReturn(IntegrationTestUtils.fileSystemReplacingHistoryResponseDto());
+
+        NoteReplacingHistoryResponseDto actual = service.getNoteReplacingHistory(NOTE_EXTERNAL_ID);
+
+        assertEquals(expected, actual);
+
+        verify(fileSystemRestService).getFileReplacingHistory(NOTE_EXTERNAL_ID);
     }
 }

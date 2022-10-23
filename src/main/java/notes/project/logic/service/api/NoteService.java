@@ -21,4 +21,6 @@ public interface NoteService {
     NoteHistoryResponseDto getNoteArchiveHistory(UUID externalId);
 
     DeleteHistoryResponseDto getNoteDeleteHistory(UUID externalId);
+
+    NoteReplacingHistoryResponseDto getNoteReplacingHistory(UUID externalId);
 }

@@ -46,4 +46,8 @@ public interface FileSystemFeignClient {
     @GetMapping("/file/{id}/deleteHistory")
     @TokenRequest
     ResponseEntity<FileSystemDeleteHistoryResponseDto> getFileDeleteHistory(@PathVariable(name = "id") UUID externalId);
+
+    @GetMapping("/file/{id}/replacingHistory")
+    @TokenRequest
+    ResponseEntity<FileSystemReplacingHistoryResponseDto> getFileReplacingHistory(@PathVariable(name = "id") UUID externalId);
 }

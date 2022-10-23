@@ -14,6 +14,31 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemReplacingHistoryResponseDto fileSystemReplacingHistoryResponseDto() {
+        return new FileSystemReplacingHistoryResponseDto()
+            .setFile(fileSystemFileDto())
+            .setHistory(Collections.singletonList(fileSystemReplacingHistoryRecordDto()));
+    }
+
+    public static FileSystemReplacingHistoryRecordDto fileSystemReplacingHistoryRecordDto() {
+        return new FileSystemReplacingHistoryRecordDto()
+            .setReplacingDate(NOTE_MOVING_DATE)
+            .setSourceDirectory(fileSystemSourceDirectoryReplacingHistoryDto())
+            .setTargetDirectory(fileSystemTargetDirectoryReplacingHistoryDto());
+    }
+
+    public static FileSystemDirectoryReplacingHistoryDto fileSystemTargetDirectoryReplacingHistoryDto() {
+        return new FileSystemDirectoryReplacingHistoryDto()
+            .setDirectoryTitle(DIRECTORY_NAME)
+            .setDirectoryExternalId(DIRECTORY_ALTERNATE_EXTERNAL_ID);
+    }
+
+    public static FileSystemDirectoryReplacingHistoryDto fileSystemSourceDirectoryReplacingHistoryDto() {
+        return new FileSystemDirectoryReplacingHistoryDto()
+            .setDirectoryTitle(DIRECTORY_NAME)
+            .setDirectoryExternalId(DIRECTORY_EXTERNAL_ID);
+    }
+
     public static FileSystemDeleteHistoryResponseDto fileSystemDeleteHistoryResponseDto(String objectTitle, LocalDateTime cretedDate) {
         return new FileSystemDeleteHistoryResponseDto()
             .setCreatedDate(cretedDate)

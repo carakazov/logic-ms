@@ -10,6 +10,7 @@ import notes.project.logic.utils.DbUtils;
 import notes.project.logic.utils.IntegrationTestUtils;
 import notes.project.logic.utils.TestUtils;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyFactorySpi;
+import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -230,6 +231,27 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
             .replace(OBJECT_TITLE_PLACEHOLDER, NOTE_TITLE);
 
         String actual = mockMvc.perform(MockMvcRequestBuilders.get("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a/deleteHistory"))
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
+
+    @Test
+    void getNoteReplacingHistory() throws Exception {
+        setAuthentication(ROLE_ADMIN);
+        stubKeycloakToken();
+
+        stubFor(get(urlMatching("/file/86c16469-229d-4fb6-a90e-a3a0f67dca8a/replacingHistory"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/filesystem/FileSystemReplacingHistoryResponse.json"))
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        String expected = TestUtils.getClasspathResource("/api/NoteReplacingHistoryResponse.json");
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a/replacingHistory"))
             .andReturn().getResponse().getContentAsString();
 
         JSONAssert.assertEquals(expected, actual, true);

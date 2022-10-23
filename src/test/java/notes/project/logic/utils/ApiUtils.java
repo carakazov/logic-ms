@@ -6,8 +6,7 @@ import java.util.Collections;
 import lombok.experimental.UtilityClass;
 import notes.project.logic.dto.*;
 import notes.project.logic.dto.api.*;
-import notes.project.logic.dto.integration.filesystem.FileSystemDeleteHistoryRecordDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemDeleteHistoryResponseDto;
+import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.model.AccessMode;
@@ -20,6 +19,36 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static NoteReplacingHistoryResponseDto noteReplacingHistoryResponseDto() {
+        return new NoteReplacingHistoryResponseDto()
+            .setNote(noteReplacingHistoryDto())
+            .setHistory(Collections.singletonList(replacingHistoryRecordDto()));
+    }
+
+    public static NoteReplacingHistoryDto noteReplacingHistoryDto() {
+        return new NoteReplacingHistoryDto()
+            .setNoteTitle(NOTE_TITLE)
+            .setNoteExternalId(NOTE_EXTERNAL_ID);
+    }
+
+    public static ReplacingHistoryRecordDto replacingHistoryRecordDto() {
+        return new ReplacingHistoryRecordDto()
+            .setReplacingDate(NOTE_MOVING_DATE)
+            .setSourceDirectory(directorySourceReplacingHistoryDto())
+            .setTargetDirectory(directoryTargetReplacingHistoryDto());
+    }
+
+    public static DirectoryReplacingHistoryDto directoryTargetReplacingHistoryDto() {
+        return new DirectoryReplacingHistoryDto()
+            .setDirectoryTitle(DIRECTORY_NAME)
+            .setDirectoryExternalId(DIRECTORY_ALTERNATE_EXTERNAL_ID);
+    }
+
+    public static DirectoryReplacingHistoryDto directorySourceReplacingHistoryDto() {
+        return new DirectoryReplacingHistoryDto()
+            .setDirectoryTitle(DIRECTORY_NAME)
+            .setDirectoryExternalId(DIRECTORY_EXTERNAL_ID);
+    }
 
     public static DeleteHistoryResponseDto deleteHistoryResponseDto(String objectTitle, LocalDateTime cretedDate) {
         return new DeleteHistoryResponseDto()

@@ -42,6 +42,7 @@ public class NoteServiceImpl implements NoteService {
     private final Validator<DeleteNoteValidationDto> deleteNoteValidator;
     private final NoteHistoryResponseMapper noteHistoryResponseMapper;
     private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
+    private final ReplacingHistoryResponseMapper replacingHistoryResponseMapper;
 
     @Override
     @Transactional
@@ -122,5 +123,11 @@ public class NoteServiceImpl implements NoteService {
     public DeleteHistoryResponseDto getNoteDeleteHistory(UUID externalId) {
         FileSystemDeleteHistoryResponseDto fileSystemResponse = fileSystemRestService.getFileDeleteHistory(externalId);
         return deleteHistoryResponseMapper.to(fileSystemResponse);
+    }
+
+    @Override
+    public NoteReplacingHistoryResponseDto getNoteReplacingHistory(UUID externalId) {
+        FileSystemReplacingHistoryResponseDto fileSystemResponse = fileSystemRestService.getFileReplacingHistory(externalId);
+        return replacingHistoryResponseMapper.to(fileSystemResponse);
     }
 }
