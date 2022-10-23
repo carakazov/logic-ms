@@ -70,4 +70,11 @@ public class NoteController {
     public DeleteHistoryResponseDto getNoteDeleteHistory(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID записки") UUID externalId) {
         return noteService.getNoteDeleteHistory(externalId);
     }
+
+    @GetMapping("/{externalId}/replacingHistory")
+    @ApiOperation(value = "Получение истории перемещения файла")
+    @Secured("ROLE_ADMIN")
+    public NoteReplacingHistoryResponseDto getNoteReplacingHistory(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID записки") UUID externalId) {
+        return noteService.getNoteReplacingHistory(externalId);
+    }
 }
