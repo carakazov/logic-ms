@@ -5,10 +5,7 @@ import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.*;
-import notes.project.logic.dto.integration.filesystem.FileSystemArchiveResponseDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemChangeFileDirectoryResponseDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemCreateFileResponseDto;
-import notes.project.logic.dto.integration.filesystem.FileSystemFileResponseDto;
+import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.*;
 import notes.project.logic.repository.NoteRepository;
@@ -44,6 +41,7 @@ public class NoteServiceImpl implements NoteService {
     private final Validator<CreateNoteValidationDto> createNoteValidator;
     private final Validator<DeleteNoteValidationDto> deleteNoteValidator;
     private final NoteHistoryResponseMapper noteHistoryResponseMapper;
+    private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
 
     @Override
     @Transactional
@@ -118,5 +116,11 @@ public class NoteServiceImpl implements NoteService {
     public NoteHistoryResponseDto getNoteArchiveHistory(UUID externalId) {
         FileSystemArchiveResponseDto fileSystemResponse = fileSystemRestService.getFileArchiveHistory(externalId);
         return noteHistoryResponseMapper.to(fileSystemResponse);
+    }
+
+    @Override
+    public DeleteHistoryResponseDto getNoteDeleteHistory(UUID externalId) {
+        FileSystemDeleteHistoryResponseDto fileSystemResponse = fileSystemRestService.getFileDeleteHistory(externalId);
+        return deleteHistoryResponseMapper.to(fileSystemResponse);
     }
 }

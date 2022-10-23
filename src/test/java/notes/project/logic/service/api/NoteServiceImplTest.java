@@ -5,10 +5,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import io.swagger.annotations.Api;
-import notes.project.logic.dto.api.CreateNoteResponseDto;
-import notes.project.logic.dto.api.MoveNoteResponseDto;
-import notes.project.logic.dto.api.NoteHistoryResponseDto;
-import notes.project.logic.dto.api.NoteResponseDto;
+import notes.project.logic.dto.api.*;
 import notes.project.logic.model.Access;
 import notes.project.logic.model.Client;
 import notes.project.logic.model.Note;
@@ -78,7 +75,8 @@ class NoteServiceImplTest {
             Mappers.getMapper(UpdateNoteMapper.class),
             createNoteValidator,
             deleteNoteValidator,
-            TestUtils.getComplexMapper(NoteHistoryResponseMapper.class)
+            TestUtils.getComplexMapper(NoteHistoryResponseMapper.class),
+            TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class)
         );
     }
 
@@ -187,5 +185,18 @@ class NoteServiceImplTest {
         assertEquals(expected, actual);
 
         verify(fileSystemRestService).getFileArchiveHistory(NOTE_EXTERNAL_ID);
+    }
+
+    @Test
+    void getNoteDeletedHistory() {
+        DeleteHistoryResponseDto expected = ApiUtils.deleteHistoryResponseDto(NOTE_TITLE, NOTE_CREATED_DATE);
+
+        when(fileSystemRestService.getFileDeleteHistory(any())).thenReturn(IntegrationTestUtils.fileSystemDeleteHistoryResponseDto(NOTE_TITLE, NOTE_CREATED_DATE));
+
+        DeleteHistoryResponseDto actual = service.getNoteDeleteHistory(NOTE_EXTERNAL_ID);
+
+        assertEquals(expected, actual);
+
+        verify(fileSystemRestService).getFileDeleteHistory(NOTE_EXTERNAL_ID);
     }
 }

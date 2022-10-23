@@ -20,4 +20,6 @@ public interface FileSystemRestService {
     void deleteFile(UUID externalId);
 
     FileSystemArchiveResponseDto getFileArchiveHistory(UUID externalId);
+
+    FileSystemDeleteHistoryResponseDto getFileDeleteHistory(UUID externalId);
 }

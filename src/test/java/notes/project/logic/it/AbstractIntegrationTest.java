@@ -51,6 +51,9 @@ public abstract class AbstractIntegrationTest {
     protected static final String ROLE_USER = "ROLE_USER";
     protected static final String ROLE_ADMIN = "ROLE_ADMIN";
 
+    protected static final String OBJECT_TITLE_PLACEHOLDER = "<OBJECT_TITLE>";
+    protected static final String CREATED_DATE_PLACEHOLDER = "<CREATED_DATE>";
+
     @Inject
     protected ApplicationProperties applicationProperties;
     @Inject

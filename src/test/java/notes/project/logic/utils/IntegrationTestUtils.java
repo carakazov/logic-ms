@@ -1,5 +1,6 @@
 package notes.project.logic.utils;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import lombok.experimental.UtilityClass;
@@ -13,6 +14,20 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemDeleteHistoryResponseDto fileSystemDeleteHistoryResponseDto(String objectTitle, LocalDateTime cretedDate) {
+        return new FileSystemDeleteHistoryResponseDto()
+            .setCreatedDate(cretedDate)
+            .setObjectTitle(objectTitle)
+            .setCurrentState(CURRENT_STATE)
+            .setHistory(Collections.singletonList(fileSystemDeleteHistoryRecordDto()));
+    }
+
+    public static FileSystemDeleteHistoryRecordDto fileSystemDeleteHistoryRecordDto() {
+        return new FileSystemDeleteHistoryRecordDto()
+            .setEvent(DELETE_HISTORY_EVENT)
+            .setEventDate(DELETE_HISTORY_EVENT_DATE);
+    }
+
     public static FileSystemArchiveResponseDto fileSystemArchiveResponseDto() {
         return new FileSystemArchiveResponseDto()
             .setFile(fileSystemFileDto())

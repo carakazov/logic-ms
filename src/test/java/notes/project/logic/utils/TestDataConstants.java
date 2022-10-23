@@ -63,4 +63,8 @@ public class TestDataConstants {
 
     public static final UUID VERSION_FILE_GUID = UUID.fromString("bc281f22-9b44-4eff-9a40-582927ec4513");
     public static final LocalDateTime EDITED_DATE = LocalDateTime.of(2022, 10, 10, 12, 12, 12);
+
+    public static final String CURRENT_STATE = "CREATED";
+    public static final String DELETE_HISTORY_EVENT = "CREATED";
+    public static final LocalDateTime DELETE_HISTORY_EVENT_DATE = LocalDateTime.of(2022, 10, 10, 10, 10 ,10);
 }

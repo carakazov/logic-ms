@@ -1,0 +1,11 @@
+{
+  "createdDate": "<CREATED_DATE>",
+  "currentState": "CREATED",
+  "objectTitle": "<OBJECT_TITLE>",
+  "history": [
+    {
+      "event": "CREATED",
+      "eventDate": "2022-10-10T10:10:10"
+    }
+  ]
+}

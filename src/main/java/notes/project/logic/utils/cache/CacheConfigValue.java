@@ -5,4 +5,5 @@ public interface CacheConfigValue {
     String PERSONAL_INFO = "personalInfo";
     String NOTE_LIST = "notes";
     String ARCHIVE_HISTORY_LIST = "archiveList";
+    String NOTE_DELETE_HISTORY = "deleteHistoryList";
 }
