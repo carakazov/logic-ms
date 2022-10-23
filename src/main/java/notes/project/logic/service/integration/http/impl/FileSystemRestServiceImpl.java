@@ -85,7 +85,8 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     @Override
     @Caching(evict = {
         @CacheEvict(value = CacheConfigValue.NOTE_LIST, key = CacheConfigValue.EXTERNAL_ID),
-        @CacheEvict(value = CacheConfigValue.ARCHIVE_HISTORY_LIST, key = CacheConfigValue.EXTERNAL_ID)
+        @CacheEvict(value = CacheConfigValue.ARCHIVE_HISTORY_LIST, key = CacheConfigValue.EXTERNAL_ID),
+        @CacheEvict(value = CacheConfigValue.FILE_VERSION, key = CacheConfigValue.EXTERNAL_ID)
     })
     public void updateFile(UUID externalId, FileSystemUpdateFileRequestDto request) {
         ResponseEntity<Void> response;
@@ -144,6 +145,19 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         ResponseEntity<FileSystemReplacingHistoryResponseDto> response;
         try {
             response = client.getFileReplacingHistory(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+        return response.getBody();
+    }
+
+    @Override
+    @Cacheable(value = CacheConfigValue.FILE_VERSION, key = CacheConfigValue.EXTERNAL_ID)
+    public FileSystemFileVersionDto getFileVersion(UUID externalId) {
+        ResponseEntity<FileSystemFileVersionDto> response;
+        try {
+            response = client.getFileVersion(externalId);
         } catch(FeignException exception) {
             throw handleFeignException(exception);
         }

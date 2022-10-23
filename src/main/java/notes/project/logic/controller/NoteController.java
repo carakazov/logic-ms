@@ -77,4 +77,9 @@ public class NoteController {
     public NoteReplacingHistoryResponseDto getNoteReplacingHistory(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID записки") UUID externalId) {
         return noteService.getNoteReplacingHistory(externalId);
     }
+
+    @GetMapping("/{externalId}/version")
+    public NoteVersionResponseDto getNoteVersion(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID версии") UUID externalId) {
+        return noteService.getNoteVersion(externalId);
+    }
 }

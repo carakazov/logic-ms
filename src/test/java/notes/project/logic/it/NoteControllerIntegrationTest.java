@@ -256,4 +256,25 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
 
         JSONAssert.assertEquals(expected, actual, true);
     }
+
+    @Test
+    void getNoteVersionSuccess() throws Exception {
+        setAuthentication(ROLE_ADMIN);
+        stubKeycloakToken();
+
+        stubFor(get(urlMatching("/file/version/86c16469-229d-4fb6-a90e-a3a0f67dca8a"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/filesystem/FileSystemFileVersion.json"))
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        String expected = TestUtils.getClasspathResource("/api/NoteVersion.json");
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a/version"))
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
 }

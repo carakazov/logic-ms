@@ -7,4 +7,5 @@ public interface CacheConfigValue {
     String ARCHIVE_HISTORY_LIST = "archiveList";
     String NOTE_DELETE_HISTORY = "deleteHistoryList";
     String REPLACING_HISTORY = "replacingHistory";
+    String FILE_VERSION = "fileVersion";
 }
