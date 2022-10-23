@@ -4,8 +4,10 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import io.swagger.annotations.Api;
 import notes.project.logic.dto.api.CreateNoteResponseDto;
 import notes.project.logic.dto.api.MoveNoteResponseDto;
+import notes.project.logic.dto.api.NoteHistoryResponseDto;
 import notes.project.logic.dto.api.NoteResponseDto;
 import notes.project.logic.model.Access;
 import notes.project.logic.model.Client;
@@ -14,10 +16,7 @@ import notes.project.logic.repository.NoteRepository;
 import notes.project.logic.service.api.impl.NoteServiceImpl;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.utils.*;
-import notes.project.logic.utils.mapper.ChangeDirectoryMapper;
-import notes.project.logic.utils.mapper.CreateFileMapper;
-import notes.project.logic.utils.mapper.NoteResponseMapper;
-import notes.project.logic.utils.mapper.UpdateNoteMapper;
+import notes.project.logic.utils.mapper.*;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.CreateNoteValidationDto;
 import notes.project.logic.validation.dto.DeleteNoteValidationDto;
@@ -78,7 +77,8 @@ class NoteServiceImplTest {
             updateNoteValidator,
             Mappers.getMapper(UpdateNoteMapper.class),
             createNoteValidator,
-            deleteNoteValidator
+            deleteNoteValidator,
+            TestUtils.getComplexMapper(NoteHistoryResponseMapper.class)
         );
     }
 
@@ -174,5 +174,18 @@ class NoteServiceImplTest {
         service.deleteNote(NOTE_EXTERNAL_ID);
 
         verify(repository).findByExternalId(NOTE_EXTERNAL_ID);
+    }
+
+    @Test
+    void getArchiveHistorySuccess() {
+        NoteHistoryResponseDto expected = ApiUtils.noteHistoryResponseDto();
+
+        when(fileSystemRestService.getFileArchiveHistory(any())).thenReturn(IntegrationTestUtils.fileSystemArchiveResponseDto());
+
+        NoteHistoryResponseDto actual = service.getNoteArchiveHistory(NOTE_EXTERNAL_ID);
+
+        assertEquals(expected, actual);
+
+        verify(fileSystemRestService).getFileArchiveHistory(NOTE_EXTERNAL_ID);
     }
 }

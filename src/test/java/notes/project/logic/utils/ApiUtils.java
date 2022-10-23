@@ -2,12 +2,9 @@ package notes.project.logic.utils;
 
 import java.util.Collections;
 
-import liquibase.pro.packaged.M;
 import lombok.experimental.UtilityClass;
 import notes.project.logic.dto.*;
 import notes.project.logic.dto.api.*;
-import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
-import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
 import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.model.AccessMode;
@@ -20,6 +17,24 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static NoteHistoryResponseDto noteHistoryResponseDto() {
+        return new NoteHistoryResponseDto()
+            .setNote(noteHistoryDto())
+            .setHistory(Collections.singletonList(noteHistoryRecordDto()));
+    }
+
+    public static NoteHistoryDto noteHistoryDto() {
+        return new NoteHistoryDto()
+            .setNoteTitle(NOTE_TITLE)
+            .setNoteExternalId(NOTE_EXTERNAL_ID);
+    }
+
+    public static NoteHistoryRecordDto noteHistoryRecordDto() {
+        return new NoteHistoryRecordDto()
+            .setEditedDate(EDITED_DATE)
+            .setVersionNoteGuid(VERSION_FILE_GUID);
+    }
+
     public static DeleteNoteValidationDto deleteNoteValidationDto() {
         return new DeleteNoteValidationDto()
             .setNote(DbUtils.note())

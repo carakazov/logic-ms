@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.*;
+import notes.project.logic.dto.integration.filesystem.FileSystemArchiveResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemChangeFileDirectoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateFileResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemFileResponseDto;
@@ -17,10 +18,7 @@ import notes.project.logic.service.api.DirectoryService;
 import notes.project.logic.service.api.NoteService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.utils.AuthHelper;
-import notes.project.logic.utils.mapper.ChangeDirectoryMapper;
-import notes.project.logic.utils.mapper.CreateFileMapper;
-import notes.project.logic.utils.mapper.NoteResponseMapper;
-import notes.project.logic.utils.mapper.UpdateNoteMapper;
+import notes.project.logic.utils.mapper.*;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.CreateNoteValidationDto;
 import notes.project.logic.validation.dto.DeleteNoteValidationDto;
@@ -45,6 +43,7 @@ public class NoteServiceImpl implements NoteService {
     private final UpdateNoteMapper updateNoteMapper;
     private final Validator<CreateNoteValidationDto> createNoteValidator;
     private final Validator<DeleteNoteValidationDto> deleteNoteValidator;
+    private final NoteHistoryResponseMapper noteHistoryResponseMapper;
 
     @Override
     @Transactional
@@ -113,5 +112,11 @@ public class NoteServiceImpl implements NoteService {
         fileSystemRestService.deleteFile(externalId);
 
         note.setDeleted(Boolean.TRUE);
+    }
+
+    @Override
+    public NoteHistoryResponseDto getNoteArchiveHistory(UUID externalId) {
+        FileSystemArchiveResponseDto fileSystemResponse = fileSystemRestService.getFileArchiveHistory(externalId);
+        return noteHistoryResponseMapper.to(fileSystemResponse);
     }
 }

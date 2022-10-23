@@ -18,4 +18,6 @@ public interface FileSystemRestService {
     void updateFile(UUID externalId, FileSystemUpdateFileRequestDto request);
 
     void deleteFile(UUID externalId);
+
+    FileSystemArchiveResponseDto getFileArchiveHistory(UUID externalId);
 }

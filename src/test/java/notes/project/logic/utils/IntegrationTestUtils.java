@@ -13,6 +13,24 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemArchiveResponseDto fileSystemArchiveResponseDto() {
+        return new FileSystemArchiveResponseDto()
+            .setFile(fileSystemFileDto())
+            .setHistory(Collections.singletonList(fileSystemHistoryDto()));
+    }
+
+    public static FileSystemFileDto fileSystemFileDto() {
+        return new FileSystemFileDto()
+            .setFileTitle(NOTE_TITLE)
+            .setFileExternalId(NOTE_EXTERNAL_ID);
+    }
+
+    public static FileSystemHistoryDto fileSystemHistoryDto() {
+        return new FileSystemHistoryDto()
+            .setEditedDate(EDITED_DATE)
+            .setVersionFileGuid(VERSION_FILE_GUID);
+    }
+
     public static FileSystemUpdateFileRequestDto fileSystemUpdateFileRequestDto() {
         return new FileSystemUpdateFileRequestDto()
             .setContent(NEW_NOTE_CONTENT);

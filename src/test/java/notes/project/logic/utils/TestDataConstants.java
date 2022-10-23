@@ -60,4 +60,7 @@ public class TestDataConstants {
     public static final LocalDateTime NOTE_MOVING_DATE = LocalDateTime.of(2022, 10, 10, 12, 12, 12);
 
     public static final String NEW_NOTE_CONTENT = "updated content";
+
+    public static final UUID VERSION_FILE_GUID = UUID.fromString("bc281f22-9b44-4eff-9a40-582927ec4513");
+    public static final LocalDateTime EDITED_DATE = LocalDateTime.of(2022, 10, 10, 12, 12, 12);
 }

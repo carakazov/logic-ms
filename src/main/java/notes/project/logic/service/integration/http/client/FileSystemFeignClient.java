@@ -38,4 +38,8 @@ public interface FileSystemFeignClient {
     @DeleteMapping("/file/{id}")
     @TokenRequest
     ResponseEntity<Void> deleteFile(@PathVariable(name = "id") UUID externalId);
+
+    @GetMapping("/file/{id}/archiveHistory")
+    @TokenRequest
+    ResponseEntity<FileSystemArchiveResponseDto> getFileArchiveHistory(@PathVariable(name = "id") UUID externalId);
 }

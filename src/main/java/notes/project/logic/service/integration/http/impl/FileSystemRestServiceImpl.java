@@ -11,6 +11,7 @@ import notes.project.logic.service.integration.http.client.FileSystemFeignClient
 import notes.project.logic.utils.cache.CacheConfigValue;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -81,7 +82,10 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     }
 
     @Override
-    @CacheEvict(value = CacheConfigValue.NOTE_LIST, key = CacheConfigValue.EXTERNAL_ID)
+    @Caching(evict = {
+        @CacheEvict(value = CacheConfigValue.NOTE_LIST, key = CacheConfigValue.EXTERNAL_ID),
+        @CacheEvict(value = CacheConfigValue.ARCHIVE_HISTORY_LIST, key = CacheConfigValue.EXTERNAL_ID)
+    })
     public void updateFile(UUID externalId, FileSystemUpdateFileRequestDto request) {
         ResponseEntity<Void> response;
         try {
@@ -102,5 +106,18 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
             throw handleFeignException(exception);
         }
         checkResponse(response);
+    }
+
+    @Override
+    @Cacheable(value = CacheConfigValue.ARCHIVE_HISTORY_LIST, key = CacheConfigValue.EXTERNAL_ID)
+    public FileSystemArchiveResponseDto getFileArchiveHistory(UUID externalId) {
+        ResponseEntity<FileSystemArchiveResponseDto> response;
+        try {
+            response = client.getFileArchiveHistory(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+        return response.getBody();
     }
 }
