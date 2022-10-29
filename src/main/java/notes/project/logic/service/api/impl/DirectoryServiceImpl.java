@@ -17,6 +17,8 @@ import notes.project.logic.service.api.DirectoryService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.mapper.CreateDirectoryMapper;
+import notes.project.logic.validation.Validator;
+import notes.project.logic.validation.dto.DeleteDirectoryValidationDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +29,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     private final CreateDirectoryMapper createDirectoryMapper;
     private final ClientService clientService;
     private final AuthHelper authHelper;
+    private final Validator<DeleteDirectoryValidationDto> deleteDirectoryValidator;
 
     @Override
     @Transactional
@@ -46,5 +49,12 @@ public class DirectoryServiceImpl implements DirectoryService {
         return repository.findByExternalId(externalId).orElseThrow(
             () -> new NotFoundException("Directory with id " + externalId + " not found")
         );
+    }
+
+    @Override
+    public void deleteDirectory(UUID externalId) {
+        Directory directory = findDirectoryByExternalId(externalId);
+        deleteDirectoryValidator.validate(new DeleteDirectoryValidationDto(authHelper.getAuthorizedClientId(), directory));
+        fileSystemRestService.deleteDirectory(directory.getExternalId());
     }
 }

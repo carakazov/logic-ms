@@ -16,6 +16,12 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static DeleteDirectoryValidationDto deleteDirectoryValidationDto() {
+        return new DeleteDirectoryValidationDto()
+            .setClientExternalId(CLIENT_EXTERNAL_ID)
+            .setDirectory(DbUtils.directory());
+    }
+
     public static MoveNoteValidationDto moveNoteValidationDto() {
         return new MoveNoteValidationDto()
             .setClientExternalId(CLIENT_EXTERNAL_ID)

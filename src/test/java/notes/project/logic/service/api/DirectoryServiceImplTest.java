@@ -1,5 +1,7 @@
 package notes.project.logic.service.api;
 
+import java.util.Optional;
+
 import notes.project.logic.dto.api.CreateDirectoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
 import notes.project.logic.model.Client;
@@ -12,6 +14,8 @@ import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.DbUtils;
 import notes.project.logic.utils.IntegrationTestUtils;
 import notes.project.logic.utils.mapper.CreateDirectoryMapper;
+import notes.project.logic.validation.Validator;
+import notes.project.logic.validation.dto.DeleteDirectoryValidationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +40,8 @@ class DirectoryServiceImplTest {
     private ClientService clientService;
     @Mock
     private AuthHelper authHelper;
+    @Mock
+    private Validator<DeleteDirectoryValidationDto> deleteDirectoryValidator;
 
     private DirectoryService service;
 
@@ -46,7 +52,8 @@ class DirectoryServiceImplTest {
             fileSystemRestService,
             Mappers.getMapper(CreateDirectoryMapper.class),
             clientService,
-            authHelper
+            authHelper,
+            deleteDirectoryValidator
         );
     }
 
@@ -70,5 +77,15 @@ class DirectoryServiceImplTest {
         verify(authHelper).getAuthorizedClientId();
         verify(clientService).findByExternalId(CLIENT_EXTERNAL_ID);
         verify(repository).save(directory.setId(null));
+    }
+
+    @Test
+    void deleteDirectorySuccess() {
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(DbUtils.directory()));
+
+        service.deleteDirectory(DIRECTORY_EXTERNAL_ID);
+
+        verify(repository).findByExternalId(DIRECTORY_EXTERNAL_ID);
+        verify(fileSystemRestService).deleteDirectory(DIRECTORY_EXTERNAL_ID);
     }
 }
