@@ -10,15 +10,18 @@ import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.model.AccessMode;
-import notes.project.logic.validation.dto.CreateNoteValidationDto;
-import notes.project.logic.validation.dto.DeleteNoteValidationDto;
-import notes.project.logic.validation.dto.ReadNoteValidationDto;
-import notes.project.logic.validation.dto.UpdateNoteValidationDto;
+import notes.project.logic.validation.dto.*;
 
 import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static MoveNoteValidationDto moveNoteValidationDto() {
+        return new MoveNoteValidationDto()
+            .setClientExternalId(CLIENT_EXTERNAL_ID)
+            .setDirectory(DbUtils.directory());
+    }
+
     public static NoteVersionResponseDto noteVersionResponseDto() {
         return new NoteVersionResponseDto()
             .setContent(NOTE_CONTENT);

@@ -41,6 +41,7 @@ application:
     wrongRequestParameters: wrong request parameters
     integrationError: Error while integration with external service.
     requestedResourceNotFound: Requested resource not found.
+    notYourDirectory: Target directory is not yours.
   externalServices:
     fileSystem:
       name: file-system-client
