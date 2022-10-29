@@ -17,10 +17,7 @@ import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.mapper.*;
 import notes.project.logic.validation.Validator;
-import notes.project.logic.validation.dto.CreateNoteValidationDto;
-import notes.project.logic.validation.dto.DeleteNoteValidationDto;
-import notes.project.logic.validation.dto.ReadNoteValidationDto;
-import notes.project.logic.validation.dto.UpdateNoteValidationDto;
+import notes.project.logic.validation.dto.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,6 +41,7 @@ public class NoteServiceImpl implements NoteService {
     private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
     private final ReplacingHistoryResponseMapper replacingHistoryResponseMapper;
     private final NoteVersionMapper noteVersionMapper;
+    private final Validator<MoveNoteValidationDto> moveNoteValidator;
 
     @Override
     @Transactional
@@ -63,10 +61,11 @@ public class NoteServiceImpl implements NoteService {
     @Override
     @Transactional
     public MoveNoteResponseDto moveNote(MoveNoteRequestDto request) {
+        Directory newDirectory = directoryService.findDirectoryByExternalId(request.getNewDirectoryExternalId());
+        moveNoteValidator.validate(new MoveNoteValidationDto(authHelper.getAuthorizedClientId(), newDirectory));
         FileSystemChangeFileDirectoryResponseDto fileSystemResponse = fileSystemRestService.changeFileDirectory(changeDirectoryMapper.toRequest(request));
         MoveNoteResponseDto response = changeDirectoryMapper.toResponse(fileSystemResponse);
         Note note = findByExternalId(request.getCreatedFileExternalId());
-        Directory newDirectory = directoryService.findDirectoryByExternalId(request.getNewDirectoryExternalId());
         note.setDirectory(newDirectory);
         return response;
     }

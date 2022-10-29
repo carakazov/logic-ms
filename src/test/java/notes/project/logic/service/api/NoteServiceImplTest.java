@@ -15,10 +15,7 @@ import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.*;
 import notes.project.logic.validation.Validator;
-import notes.project.logic.validation.dto.CreateNoteValidationDto;
-import notes.project.logic.validation.dto.DeleteNoteValidationDto;
-import notes.project.logic.validation.dto.ReadNoteValidationDto;
-import notes.project.logic.validation.dto.UpdateNoteValidationDto;
+import notes.project.logic.validation.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,6 +52,8 @@ class NoteServiceImplTest {
     private Validator<CreateNoteValidationDto> createNoteValidator;
     @Mock
     private Validator<DeleteNoteValidationDto> deleteNoteValidator;
+    @Mock
+    private Validator<MoveNoteValidationDto> moveNoteValidator;
 
     private NoteService service;
 
@@ -78,7 +77,8 @@ class NoteServiceImplTest {
             TestUtils.getComplexMapper(NoteHistoryResponseMapper.class),
             TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class),
             TestUtils.getComplexMapper(ReplacingHistoryResponseMapper.class),
-            Mappers.getMapper(NoteVersionMapper.class)
+            Mappers.getMapper(NoteVersionMapper.class),
+            moveNoteValidator
         );
     }
 
