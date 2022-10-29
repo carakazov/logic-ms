@@ -54,4 +54,8 @@ public interface FileSystemFeignClient {
     @GetMapping("/file/version/{id}")
     @TokenRequest
     ResponseEntity<FileSystemFileVersionDto> getFileVersion(@PathVariable(name = "id") UUID externalId);
+
+    @DeleteMapping("/directory/{id}")
+    @TokenRequest
+    ResponseEntity<Void> deleteDirectory(@PathVariable(name = "id") UUID externalId);
 }

@@ -2,37 +2,34 @@ package notes.project.logic.validation;
 
 import java.util.UUID;
 
-import notes.project.logic.exception.ValidationException;
 import notes.project.logic.utils.ApiUtils;
-import notes.project.logic.validation.dto.MoveNoteValidationDto;
-import notes.project.logic.validation.impl.MoveNoteValidator;
+import notes.project.logic.validation.dto.DeleteDirectoryValidationDto;
+import notes.project.logic.validation.impl.DeleteDirectoryValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Component;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Component
-class MoveNoteValidatorTest {
-    private Validator<MoveNoteValidationDto> validator;
+class DeleteDirectoryValidatorTest {
+    private Validator<DeleteDirectoryValidationDto> validator;
 
     @BeforeEach
     void init() {
-        validator = new MoveNoteValidator();
+        validator = new DeleteDirectoryValidator();
     }
 
     @Test
     void validateSuccess() {
-        MoveNoteValidationDto validationDto = ApiUtils.moveNoteValidationDto();
+        DeleteDirectoryValidationDto validationDto = ApiUtils.deleteDirectoryValidationDto();
 
         assertDoesNotThrow(() -> validator.validate(validationDto));
     }
 
     @Test
     void validateThrow() {
-        MoveNoteValidationDto validationDto = ApiUtils.moveNoteValidationDto().setClientExternalId(UUID.randomUUID());
+        DeleteDirectoryValidationDto validationDto = ApiUtils.deleteDirectoryValidationDto().setClientExternalId(UUID.randomUUID());
 
         assertThrows(
             AccessDeniedException.class,

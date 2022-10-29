@@ -2,6 +2,7 @@ package notes.project.logic.it;
 
 import javax.inject.Inject;
 
+import liquibase.pro.packaged.D;
 import notes.project.logic.controller.ClientController;
 import notes.project.logic.controller.DirectoryController;
 import notes.project.logic.model.Directory;
@@ -83,5 +84,21 @@ class DirectoryControllerIntegrationTest extends AbstractIntegrationTest {
         ).getSingleResult();
 
         assertNotNull(directory);
+    }
+
+    @Test
+    void deleteDirectorySuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubKeycloakToken();
+
+        testEntityManager.merge(DbUtils.client());
+        testEntityManager.merge(DbUtils.directory());
+
+        stubFor(delete(urlMatching("/directory/a8314703-2bfe-46f9-ae10-9d54ed81e33f"))
+            .willReturn(aResponse()
+                .withStatus(HttpStatus.OK.value())));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/directory/a8314703-2bfe-46f9-ae10-9d54ed81e33f"))
+            .andExpect(status().isOk());
     }
 }

@@ -10,4 +10,6 @@ public interface DirectoryService {
     CreateDirectoryResponseDto createDirectory(CreateDirectoryRequestDto request);
 
     Directory findDirectoryByExternalId(UUID externalId);
+
+    void deleteDirectory(UUID externalId);
 }
