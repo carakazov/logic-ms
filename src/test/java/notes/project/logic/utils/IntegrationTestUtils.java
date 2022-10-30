@@ -14,6 +14,21 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemDirectoryDto fileSystemDirectoryDto() {
+        return new FileSystemDirectoryDto()
+            .setCreationDate(DIRECTORY_CREATION_TIME)
+            .setTitle(DIRECTORY_NAME)
+            .setExternalId(DIRECTORY_EXTERNAL_ID)
+            .setFiles(Collections.singletonList(fileSystemFileInfoDto()));
+    }
+
+    public static FileSystemFileInfoDto fileSystemFileInfoDto() {
+        return new FileSystemFileInfoDto()
+            .setCreationDate(NOTE_CREATED_DATE)
+            .setTitle(NOTE_TITLE)
+            .setExternalId(NOTE_EXTERNAL_ID);
+    }
+
     public static FileSystemFileVersionDto fileSystemFileVersionDto() {
         return new FileSystemFileVersionDto()
             .setContent(NOTE_CONTENT);

@@ -101,4 +101,29 @@ class DirectoryControllerIntegrationTest extends AbstractIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/directory/a8314703-2bfe-46f9-ae10-9d54ed81e33f"))
             .andExpect(status().isOk());
     }
+
+    @Test
+    void readDirectorySuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubKeycloakToken();
+
+        testEntityManager.merge(DbUtils.client());
+        testEntityManager.merge(DbUtils.directory());
+
+        stubFor(get(urlMatching("/directory/a8314703-2bfe-46f9-ae10-9d54ed81e33f"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/filesystem/FileSystemReadDirectoryResponse.json"))
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        String expected = TestUtils.getClasspathResource("/api/ReadDirectoryResponse.json");
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/directory/a8314703-2bfe-46f9-ae10-9d54ed81e33f"))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
 }

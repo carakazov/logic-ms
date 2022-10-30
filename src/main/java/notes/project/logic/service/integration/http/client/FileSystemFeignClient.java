@@ -58,4 +58,8 @@ public interface FileSystemFeignClient {
     @DeleteMapping("/directory/{id}")
     @TokenRequest
     ResponseEntity<Void> deleteDirectory(@PathVariable(name = "id") UUID externalId);
+
+    @GetMapping("/directory/{id}")
+    @TokenRequest
+    ResponseEntity<FileSystemDirectoryDto> readDirectory(@PathVariable(name = "id") UUID externalId);
 }
