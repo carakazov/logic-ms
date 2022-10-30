@@ -176,4 +176,17 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         }
         checkResponse(response);
     }
+
+    @Override
+    @Cacheable(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.EXTERNAL_ID)
+    public FileSystemDirectoryDto readDirectory(UUID externalId) {
+        ResponseEntity<FileSystemDirectoryDto> response;
+        try {
+            response = client.readDirectory(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+        return response.getBody();
+    }
 }

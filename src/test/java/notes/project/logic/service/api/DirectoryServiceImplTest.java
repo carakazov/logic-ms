@@ -3,19 +3,19 @@ package notes.project.logic.service.api;
 import java.util.Optional;
 
 import notes.project.logic.dto.api.CreateDirectoryResponseDto;
+import notes.project.logic.dto.api.DirectoryInfoDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
 import notes.project.logic.model.Client;
 import notes.project.logic.model.Directory;
 import notes.project.logic.repository.DirectoryRepository;
 import notes.project.logic.service.api.impl.DirectoryServiceImpl;
 import notes.project.logic.service.integration.http.FileSystemRestService;
-import notes.project.logic.utils.ApiUtils;
-import notes.project.logic.utils.AuthHelper;
-import notes.project.logic.utils.DbUtils;
-import notes.project.logic.utils.IntegrationTestUtils;
+import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.CreateDirectoryMapper;
+import notes.project.logic.utils.mapper.DirectoryInfoMapper;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.DeleteDirectoryValidationDto;
+import notes.project.logic.validation.dto.OwningValidationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +42,8 @@ class DirectoryServiceImplTest {
     private AuthHelper authHelper;
     @Mock
     private Validator<DeleteDirectoryValidationDto> deleteDirectoryValidator;
+    @Mock
+    private Validator<OwningValidationDto> owningValidator;
 
     private DirectoryService service;
 
@@ -53,7 +55,9 @@ class DirectoryServiceImplTest {
             Mappers.getMapper(CreateDirectoryMapper.class),
             clientService,
             authHelper,
-            deleteDirectoryValidator
+            deleteDirectoryValidator,
+            TestUtils.getComplexMapper(DirectoryInfoMapper.class),
+            owningValidator
         );
     }
 
@@ -87,5 +91,20 @@ class DirectoryServiceImplTest {
 
         verify(repository).findByExternalId(DIRECTORY_EXTERNAL_ID);
         verify(fileSystemRestService).deleteDirectory(DIRECTORY_EXTERNAL_ID);
+    }
+
+    @Test
+    void readDirectorySuccess() {
+        DirectoryInfoDto expected = ApiUtils.directoryInfoDto();
+
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(DbUtils.directory()));
+        when(fileSystemRestService.readDirectory(any())).thenReturn(IntegrationTestUtils.fileSystemDirectoryDto());
+
+        DirectoryInfoDto actual = service.readDirectory(DIRECTORY_EXTERNAL_ID);
+
+        assertEquals(expected, actual);
+
+        verify(repository).findByExternalId(DIRECTORY_EXTERNAL_ID);
+        verify(fileSystemRestService).readDirectory(DIRECTORY_EXTERNAL_ID);
     }
 }

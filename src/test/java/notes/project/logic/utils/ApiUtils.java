@@ -16,6 +16,28 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static DirectoryInfoDto directoryInfoDto() {
+        return new DirectoryInfoDto()
+            .setCreationDate(DIRECTORY_CREATION_TIME)
+            .setTitle(DIRECTORY_NAME)
+            .setExternalId(DIRECTORY_EXTERNAL_ID)
+            .setNotes(Collections.singletonList(noteInfoDto()));
+    }
+
+    public static NoteInfoDto noteInfoDto() {
+        return new NoteInfoDto()
+            .setCreationDate(NOTE_CREATED_DATE)
+            .setTitle(NOTE_TITLE)
+            .setExternalId(NOTE_EXTERNAL_ID);
+    }
+
+    public static OwningValidationDto owningValidationDto() {
+        return new OwningValidationDto(
+            CLIENT_EXTERNAL_ID,
+            CLIENT_EXTERNAL_ID
+        );
+    }
+
     public static DeleteDirectoryValidationDto deleteDirectoryValidationDto() {
         return new DeleteDirectoryValidationDto()
             .setClientExternalId(CLIENT_EXTERNAL_ID)

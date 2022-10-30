@@ -28,4 +28,6 @@ public interface FileSystemRestService {
     FileSystemFileVersionDto getFileVersion(UUID externalId);
 
     void deleteDirectory(UUID externalId);
+
+    FileSystemDirectoryDto readDirectory(UUID externalId);
 }
