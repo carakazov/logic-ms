@@ -62,4 +62,8 @@ public interface FileSystemFeignClient {
     @GetMapping("/directory/{id}")
     @TokenRequest
     ResponseEntity<FileSystemDirectoryDto> readDirectory(@PathVariable(name = "id") UUID externalId);
+
+    @GetMapping("/directory/{id}/deleteHistory")
+    @TokenRequest
+    ResponseEntity<FileSystemDeleteHistoryResponseDto> getDirectoryDeleteHistory(@PathVariable(name = "id") UUID externalId);
 }

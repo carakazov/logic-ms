@@ -30,4 +30,6 @@ public interface FileSystemRestService {
     void deleteDirectory(UUID externalId);
 
     FileSystemDirectoryDto readDirectory(UUID externalId);
+
+    FileSystemDeleteHistoryResponseDto getDirectoryDeleteHistory(UUID externalId);
 }

@@ -166,7 +166,12 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     }
 
     @Override
-    @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.EXTERNAL_ID)
+    @Caching(
+        evict = {
+            @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.EXTERNAL_ID),
+            @CacheEvict(value = CacheConfigValue.DIRECTORY_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID)
+        }
+    )
     public void deleteDirectory(UUID externalId) {
         ResponseEntity<Void> response;
         try {
@@ -183,6 +188,19 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         ResponseEntity<FileSystemDirectoryDto> response;
         try {
             response = client.readDirectory(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+        return response.getBody();
+    }
+
+    @Override
+    @Cacheable(value = CacheConfigValue.DIRECTORY_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID)
+    public FileSystemDeleteHistoryResponseDto getDirectoryDeleteHistory(UUID externalId) {
+        ResponseEntity<FileSystemDeleteHistoryResponseDto> response;
+        try {
+            response = client.getDirectoryDeleteHistory(externalId);
         } catch(FeignException exception) {
             throw handleFeignException(exception);
         }
