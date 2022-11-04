@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.CreateDirectoryRequestDto;
 import notes.project.logic.dto.api.CreateDirectoryResponseDto;
+import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.DirectoryInfoDto;
 import notes.project.logic.service.api.DirectoryService;
 import org.springframework.security.access.annotation.Secured;
@@ -40,5 +41,12 @@ public class DirectoryController {
     @Secured("ROLE_USER")
     public DirectoryInfoDto readDirectory(@PathVariable(name = "id") @ApiParam(value = "Внешний ID удаляемой директории") UUID externalId) {
         return directoryService.readDirectory(externalId);
+    }
+
+    @GetMapping("/{id}/deleteHistory")
+    @ApiOperation("Запрос истории удалений и восстановлений файла")
+    @Secured("ROLE_ADMIN")
+    public DeleteHistoryResponseDto getDirectoryDeleteHistory(@PathVariable(name = "id") @ApiParam(value = "Внешний ID удаляемой директории") UUID externalId) {
+        return directoryService.getDirectoryDeleteHistory(externalId);
     }
 }

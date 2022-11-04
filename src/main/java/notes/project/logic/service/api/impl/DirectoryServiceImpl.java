@@ -6,9 +6,11 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.CreateDirectoryRequestDto;
 import notes.project.logic.dto.api.CreateDirectoryResponseDto;
+import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.DirectoryInfoDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryRequestDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
+import notes.project.logic.dto.integration.filesystem.FileSystemDeleteHistoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemDirectoryDto;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
@@ -19,6 +21,7 @@ import notes.project.logic.service.api.DirectoryService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.mapper.CreateDirectoryMapper;
+import notes.project.logic.utils.mapper.DeleteHistoryResponseMapper;
 import notes.project.logic.utils.mapper.DirectoryInfoMapper;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.DeleteDirectoryValidationDto;
@@ -36,6 +39,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     private final Validator<DeleteDirectoryValidationDto> deleteDirectoryValidator;
     private final DirectoryInfoMapper directoryInfoMapper;
     private final Validator<OwningValidationDto> owningValidator;
+    private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
 
     @Override
     @Transactional
@@ -71,5 +75,12 @@ public class DirectoryServiceImpl implements DirectoryService {
         owningValidator.validate(new OwningValidationDto(authHelper.getAuthorizedClientId(), directory.getClient().getExternalId()));
         FileSystemDirectoryDto fileSystemResponse = fileSystemRestService.readDirectory(externalId);
         return directoryInfoMapper.to(fileSystemResponse);
+    }
+
+    @Override
+    public DeleteHistoryResponseDto getDirectoryDeleteHistory(UUID externalId) {
+        Directory directory = findDirectoryByExternalId(externalId);
+        FileSystemDeleteHistoryResponseDto fileSystemResponse = fileSystemRestService.getDirectoryDeleteHistory(directory.getExternalId());
+        return deleteHistoryResponseMapper.to(fileSystemResponse);
     }
 }
