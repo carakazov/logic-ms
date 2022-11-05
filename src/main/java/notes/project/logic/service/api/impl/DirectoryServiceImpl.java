@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.CreateDirectoryRequestDto;
 import notes.project.logic.dto.api.CreateDirectoryResponseDto;
 import notes.project.logic.dto.api.DeleteHistoryResponseDto;
-import notes.project.logic.dto.api.DirectoryInfoDto;
+import notes.project.logic.dto.api.DirectoryDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryRequestDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemDeleteHistoryResponseDto;
@@ -22,7 +22,7 @@ import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.mapper.CreateDirectoryMapper;
 import notes.project.logic.utils.mapper.DeleteHistoryResponseMapper;
-import notes.project.logic.utils.mapper.DirectoryInfoMapper;
+import notes.project.logic.utils.mapper.DirectoryDtoMapper;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.DeleteDirectoryValidationDto;
 import notes.project.logic.validation.dto.OwningValidationDto;
@@ -37,7 +37,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     private final ClientService clientService;
     private final AuthHelper authHelper;
     private final Validator<DeleteDirectoryValidationDto> deleteDirectoryValidator;
-    private final DirectoryInfoMapper directoryInfoMapper;
+    private final DirectoryDtoMapper directoryDtoMapper;
     private final Validator<OwningValidationDto> owningValidator;
     private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
 
@@ -70,11 +70,11 @@ public class DirectoryServiceImpl implements DirectoryService {
 
     @Override
     @Transactional
-    public DirectoryInfoDto readDirectory(UUID externalId) {
+    public DirectoryDto readDirectory(UUID externalId) {
         Directory directory = findDirectoryByExternalId(externalId);
         owningValidator.validate(new OwningValidationDto(authHelper.getAuthorizedClientId(), directory.getClient().getExternalId()));
         FileSystemDirectoryDto fileSystemResponse = fileSystemRestService.readDirectory(externalId);
-        return directoryInfoMapper.to(fileSystemResponse);
+        return directoryDtoMapper.to(fileSystemResponse);
     }
 
     @Override

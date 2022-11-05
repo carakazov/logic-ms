@@ -33,6 +33,7 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     }
 
     @Override
+    @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.REQUEST_CLUSTER_EXTERNAL_ID)
     public FileSystemCreateDirectoryResponseDto createDirectory(FileSystemCreateDirectoryRequestDto request) {
         ResponseEntity<FileSystemCreateDirectoryResponseDto> response;
         try {
@@ -45,6 +46,7 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     }
 
     @Override
+    @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.REQUEST_DIRECTORY_EXTERNAL_ID)
     public FileSystemCreateFileResponseDto createFile(FileSystemCreateFileRequestDto request) {
         ResponseEntity<FileSystemCreateFileResponseDto> response;
         try {
@@ -169,7 +171,8 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     @Caching(
         evict = {
             @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.EXTERNAL_ID),
-            @CacheEvict(value = CacheConfigValue.DIRECTORY_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID)
+            @CacheEvict(value = CacheConfigValue.DIRECTORY_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID),
+            @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.EXTERNAL_ID)
         }
     )
     public void deleteDirectory(UUID externalId) {
@@ -201,6 +204,19 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         ResponseEntity<FileSystemDeleteHistoryResponseDto> response;
         try {
             response = client.getDirectoryDeleteHistory(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+        return response.getBody();
+    }
+
+    @Override
+    @Cacheable(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.EXTERNAL_ID)
+    public FileSystemClusterDto readCluster(UUID externalId) {
+        ResponseEntity<FileSystemClusterDto> response;
+        try {
+            response = client.readCluster(externalId);
         } catch(FeignException exception) {
             throw handleFeignException(exception);
         }

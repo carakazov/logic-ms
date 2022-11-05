@@ -66,4 +66,8 @@ public interface FileSystemFeignClient {
     @GetMapping("/directory/{id}/deleteHistory")
     @TokenRequest
     ResponseEntity<FileSystemDeleteHistoryResponseDto> getDirectoryDeleteHistory(@PathVariable(name = "id") UUID externalId);
+
+    @GetMapping("/cluster/{id}")
+    @TokenRequest
+    ResponseEntity<FileSystemClusterDto> readCluster(@PathVariable(name = "id") UUID externalId);
 }

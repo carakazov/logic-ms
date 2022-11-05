@@ -14,6 +14,21 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemClusterDto fileSystemClusterDto() {
+        return new FileSystemClusterDto()
+            .setTitle(CLUSTER_TITLE)
+            .setExternalId(CLIENT_EXTERNAL_ID)
+            .setCreationDate(CLUSTER_CREATE_DATE)
+            .setDirectories(Collections.singletonList(fileSystemDirectoryInfoDto()));
+    }
+
+    public static FileSystemDirectoryInfoDto fileSystemDirectoryInfoDto() {
+        return new FileSystemDirectoryInfoDto()
+            .setCreationDate(DIRECTORY_CREATION_TIME)
+            .setExternalId(DIRECTORY_EXTERNAL_ID)
+            .setTitle(DIRECTORY_NAME);
+    }
+
     public static FileSystemDirectoryDto fileSystemDirectoryDto() {
         return new FileSystemDirectoryDto()
             .setCreationDate(DIRECTORY_CREATION_TIME)

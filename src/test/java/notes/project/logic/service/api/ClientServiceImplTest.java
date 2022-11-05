@@ -2,6 +2,7 @@ package notes.project.logic.service.api;
 
 import java.util.Optional;
 
+import notes.project.logic.dto.api.ClusterDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
@@ -10,10 +11,8 @@ import notes.project.logic.service.api.ClientService;
 import notes.project.logic.service.api.impl.ClientServiceImpl;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.service.integration.http.UserDataSystemRestService;
-import notes.project.logic.utils.ApiUtils;
-import notes.project.logic.utils.DbUtils;
-import notes.project.logic.utils.IntegrationTestUtils;
-import notes.project.logic.utils.TestUtils;
+import notes.project.logic.utils.*;
+import notes.project.logic.utils.mapper.ClusterDtoMapper;
 import notes.project.logic.utils.mapper.CreateClientMapper;
 import notes.project.logic.utils.mapper.PersonalInfoMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +22,7 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static notes.project.logic.utils.TestDataConstants.CLIENT_EXTERNAL_ID;
+import static notes.project.logic.utils.TestDataConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,6 +37,8 @@ class ClientServiceImplTest {
     private FileSystemRestService fileSystemRestService;
     @Mock
     private UserDataSystemRestService userDataSystemRestService;
+    @Mock
+    private AuthHelper authHelper;
     private ClientService service;
 
     @BeforeEach
@@ -47,7 +48,9 @@ class ClientServiceImplTest {
             Mappers.getMapper(CreateClientMapper.class),
             fileSystemRestService,
             userDataSystemRestService,
-            TestUtils.getComplexMapper(PersonalInfoMapper.class)
+            TestUtils.getComplexMapper(PersonalInfoMapper.class),
+            authHelper,
+            TestUtils.getComplexMapper(ClusterDtoMapper.class)
         );
     }
 
@@ -106,5 +109,22 @@ class ClientServiceImplTest {
 
         verify(repository).findByExternalId(CLIENT_EXTERNAL_ID);
         verify(userDataSystemRestService).getPersonalInfo(CLIENT_EXTERNAL_ID);
+    }
+
+    @Test
+    void readCluster() {
+        ClusterDto expected = ApiUtils.clusterDto();
+
+        when(authHelper.getAuthorizedClientId()).thenReturn(CLIENT_EXTERNAL_ID);
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(DbUtils.client()));
+        when(fileSystemRestService.readCluster(any())).thenReturn(IntegrationTestUtils.fileSystemClusterDto());
+
+        ClusterDto actual = service.readCluster();
+
+        assertEquals(expected, actual);
+
+        verify(authHelper).getAuthorizedClientId();
+        verify(repository).findByExternalId(CLIENT_EXTERNAL_ID);
+        verify(fileSystemRestService).readCluster(CLUSTER_EXTERNAL_ID);
     }
 }

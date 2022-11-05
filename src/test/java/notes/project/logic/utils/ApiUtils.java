@@ -6,7 +6,6 @@ import java.util.Collections;
 import lombok.experimental.UtilityClass;
 import notes.project.logic.dto.*;
 import notes.project.logic.dto.api.*;
-import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.model.AccessMode;
@@ -16,8 +15,23 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static ClusterDto clusterDto() {
+        return new ClusterDto()
+            .setTitle(CLUSTER_TITLE)
+            .setExternalId(CLIENT_EXTERNAL_ID)
+            .setCreationDate(CLUSTER_CREATE_DATE)
+            .setDirectories(Collections.singletonList(directoryInfoDto()));
+    }
+
     public static DirectoryInfoDto directoryInfoDto() {
         return new DirectoryInfoDto()
+            .setCreationDate(DIRECTORY_CREATION_TIME)
+            .setExternalId(DIRECTORY_EXTERNAL_ID)
+            .setTitle(DIRECTORY_NAME);
+    }
+
+    public static DirectoryDto directoryDto() {
+        return new DirectoryDto()
             .setCreationDate(DIRECTORY_CREATION_TIME)
             .setTitle(DIRECTORY_NAME)
             .setExternalId(DIRECTORY_EXTERNAL_ID)

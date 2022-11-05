@@ -2,10 +2,9 @@ package notes.project.logic.service.api;
 
 import java.util.Optional;
 
-import io.swagger.annotations.Api;
 import notes.project.logic.dto.api.CreateDirectoryResponseDto;
 import notes.project.logic.dto.api.DeleteHistoryResponseDto;
-import notes.project.logic.dto.api.DirectoryInfoDto;
+import notes.project.logic.dto.api.DirectoryDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemCreateDirectoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemDeleteHistoryResponseDto;
 import notes.project.logic.model.Client;
@@ -16,7 +15,7 @@ import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.CreateDirectoryMapper;
 import notes.project.logic.utils.mapper.DeleteHistoryResponseMapper;
-import notes.project.logic.utils.mapper.DirectoryInfoMapper;
+import notes.project.logic.utils.mapper.DirectoryDtoMapper;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.DeleteDirectoryValidationDto;
 import notes.project.logic.validation.dto.OwningValidationDto;
@@ -60,7 +59,7 @@ class DirectoryServiceImplTest {
             clientService,
             authHelper,
             deleteDirectoryValidator,
-            TestUtils.getComplexMapper(DirectoryInfoMapper.class),
+            TestUtils.getComplexMapper(DirectoryDtoMapper.class),
             owningValidator,
             TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class)
         );
@@ -100,12 +99,12 @@ class DirectoryServiceImplTest {
 
     @Test
     void readDirectorySuccess() {
-        DirectoryInfoDto expected = ApiUtils.directoryInfoDto();
+        DirectoryDto expected = ApiUtils.directoryDto();
 
         when(repository.findByExternalId(any())).thenReturn(Optional.of(DbUtils.directory()));
         when(fileSystemRestService.readDirectory(any())).thenReturn(IntegrationTestUtils.fileSystemDirectoryDto());
 
-        DirectoryInfoDto actual = service.readDirectory(DIRECTORY_EXTERNAL_ID);
+        DirectoryDto actual = service.readDirectory(DIRECTORY_EXTERNAL_ID);
 
         assertEquals(expected, actual);
 
