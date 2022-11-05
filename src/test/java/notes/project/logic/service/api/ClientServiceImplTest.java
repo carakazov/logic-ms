@@ -112,7 +112,7 @@ class ClientServiceImplTest {
     }
 
     @Test
-    void readCluster() {
+    void readClusterSuccess() {
         ClusterDto expected = ApiUtils.clusterDto();
 
         when(authHelper.getAuthorizedClientId()).thenReturn(CLIENT_EXTERNAL_ID);
@@ -126,5 +126,16 @@ class ClientServiceImplTest {
         verify(authHelper).getAuthorizedClientId();
         verify(repository).findByExternalId(CLIENT_EXTERNAL_ID);
         verify(fileSystemRestService).readCluster(CLUSTER_EXTERNAL_ID);
+    }
+
+    @Test
+    void deleteClusterSuccess() {
+        when(authHelper.getAuthorizedClientId()).thenReturn(CLIENT_EXTERNAL_ID);
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(DbUtils.client()));
+
+        service.deleteCluster();
+
+        verify(authHelper).getAuthorizedClientId();
+        verify(repository).findByExternalId(CLIENT_EXTERNAL_ID);
     }
 }

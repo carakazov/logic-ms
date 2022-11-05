@@ -3,6 +3,7 @@ package notes.project.logic.service.integration.http.impl;
 import java.util.UUID;
 
 import feign.FeignException;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.service.integration.http.AbstractRestService;
@@ -222,5 +223,17 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         }
         checkResponse(response);
         return response.getBody();
+    }
+
+    @Override
+    @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.EXTERNAL_ID)
+    public void deleteCluster(UUID externalId) {
+        ResponseEntity<Void> response;
+        try {
+            response = client.deleteCluster(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
     }
 }

@@ -66,9 +66,20 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public ClusterDto readCluster() {
-        UUID currentClientId = authHelper.getAuthorizedClientId();
-        Client client = findByExternalId(currentClientId);
+        Client client = getClientFromContext();
         FileSystemClusterDto fileSystemResponse = fileSystemRestService.readCluster(client.getClusterExternalId());
         return clusterDtoMapper.to(fileSystemResponse);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCluster() {
+        Client client = getClientFromContext();
+        fileSystemRestService.deleteCluster(client.getClusterExternalId());
+    }
+
+    private Client getClientFromContext() {
+        UUID currentClientId = authHelper.getAuthorizedClientId();
+        return findByExternalId(currentClientId);
     }
 }
