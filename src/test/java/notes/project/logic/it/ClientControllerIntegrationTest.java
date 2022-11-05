@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import com.github.tomakehurst.wiremock.http.HttpHeader;
 import com.sun.jdi.event.ExceptionEvent;
 import notes.project.logic.controller.ClientController;
+import notes.project.logic.dto.api.ClusterDto;
 import notes.project.logic.utils.DbUtils;
 import notes.project.logic.utils.TestUtils;
 import org.aspectj.lang.annotation.After;
@@ -28,6 +29,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static notes.project.logic.utils.TestDataConstants.CLUSTER_CREATE_DATE;
+import static notes.project.logic.utils.TestDataConstants.CLUSTER_TITLE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -116,5 +119,33 @@ class ClientControllerIntegrationTest extends AbstractIntegrationTest {
         );
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/client")).andExpect(status().isOk());
+    }
+
+    @Test
+    void getClusterDeleteHistorySuccess() throws Exception {
+        setAuthentication(ROLE_ADMIN);
+        stubKeycloakToken();
+
+        testEntityManager.merge(DbUtils.client());
+
+        stubFor(get(urlMatching("/cluster/e730fd34-78b9-41ab-8dd7-33c24c8fda23/deleteHistory"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/filesystem/FileSystemDeleteHistoryResponse.json")
+                    .replace(OBJECT_TITLE_PLACEHOLDER, CLUSTER_TITLE)
+                    .replace(CREATED_DATE_PLACEHOLDER, CLUSTER_CREATE_DATE.toString())
+                )
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        String expected = TestUtils.getClasspathResource("/api/DeleteHistoryResponse.json")
+            .replace(OBJECT_TITLE_PLACEHOLDER, CLUSTER_TITLE)
+            .replace(CREATED_DATE_PLACEHOLDER, CLUSTER_CREATE_DATE.toString());
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/client/1c7b68c7-df51-4f95-b90f-8cb9748e3635/deleteHistory"))
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
     }
 }

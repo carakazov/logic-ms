@@ -5,6 +5,7 @@ import java.util.UUID;
 import feign.FeignException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.service.integration.http.AbstractRestService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
@@ -226,7 +227,9 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     }
 
     @Override
-    @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.EXTERNAL_ID)
+    @Caching(evict = {
+        @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.EXTERNAL_ID)
+    })
     public void deleteCluster(UUID externalId) {
         ResponseEntity<Void> response;
         try {
@@ -235,5 +238,18 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
             throw handleFeignException(exception);
         }
         checkResponse(response);
+    }
+
+    @Override
+    @Cacheable(value = CacheConfigValue.CLUSTER_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID)
+    public FileSystemDeleteHistoryResponseDto getClusterDeleteHistory(UUID externalId) {
+       ResponseEntity<FileSystemDeleteHistoryResponseDto> response;
+       try {
+           response = client.getClusterDeleteHistory(externalId);
+       } catch(FeignException exception) {
+           throw handleFeignException(exception);
+       }
+       checkResponse(response);
+       return response.getBody();
     }
 }

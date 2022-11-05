@@ -2,6 +2,7 @@ package notes.project.logic.service.integration.http.client;
 
 import java.util.UUID;
 
+import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.*;
 import notes.project.logic.utils.token.TokenRequest;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -74,4 +75,8 @@ public interface FileSystemFeignClient {
     @DeleteMapping("/cluster/{id}")
     @TokenRequest
     ResponseEntity<Void> deleteCluster(@PathVariable(name = "id") UUID externalId);
+
+    @GetMapping("/cluster/{id}/deleteHistory")
+    @TokenRequest
+    ResponseEntity<FileSystemDeleteHistoryResponseDto> getClusterDeleteHistory(@PathVariable(name = "id") UUID externalId);
 }

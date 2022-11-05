@@ -3,6 +3,7 @@ package notes.project.logic.service.api;
 import java.util.UUID;
 
 import notes.project.logic.dto.api.ClusterDto;
+import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.model.Client;
 
@@ -16,4 +17,6 @@ public interface ClientService {
     ClusterDto readCluster();
 
     void deleteCluster();
+
+    DeleteHistoryResponseDto getClusterDeleteHistory(UUID clientExternalId);
 }
