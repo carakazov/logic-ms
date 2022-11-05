@@ -4,6 +4,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import com.github.tomakehurst.wiremock.http.HttpHeader;
+import com.sun.jdi.event.ExceptionEvent;
 import notes.project.logic.controller.ClientController;
 import notes.project.logic.utils.DbUtils;
 import notes.project.logic.utils.TestUtils;
@@ -99,5 +100,21 @@ class ClientControllerIntegrationTest extends AbstractIntegrationTest {
         String expected = TestUtils.getClasspathResource("/api/ClusterResponse.json");
 
         JSONAssert.assertEquals(expected, actual, true);
+    }
+
+    @Test
+    void deleteClusterSuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubKeycloakToken();
+
+        testEntityManager.merge(DbUtils.client());
+
+        stubFor(delete(urlMatching("/cluster/e730fd34-78b9-41ab-8dd7-33c24c8fda23"))
+            .willReturn(aResponse()
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/client")).andExpect(status().isOk());
     }
 }

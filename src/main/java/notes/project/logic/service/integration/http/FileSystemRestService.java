@@ -34,4 +34,6 @@ public interface FileSystemRestService {
     FileSystemDeleteHistoryResponseDto getDirectoryDeleteHistory(UUID externalId);
 
     FileSystemClusterDto readCluster(UUID externalId);
+
+    void deleteCluster(UUID deleteCluster);
 }

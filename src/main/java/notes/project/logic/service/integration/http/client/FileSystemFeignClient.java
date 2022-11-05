@@ -70,4 +70,8 @@ public interface FileSystemFeignClient {
     @GetMapping("/cluster/{id}")
     @TokenRequest
     ResponseEntity<FileSystemClusterDto> readCluster(@PathVariable(name = "id") UUID externalId);
+
+    @DeleteMapping("/cluster/{id}")
+    @TokenRequest
+    ResponseEntity<Void> deleteCluster(@PathVariable(name = "id") UUID externalId);
 }

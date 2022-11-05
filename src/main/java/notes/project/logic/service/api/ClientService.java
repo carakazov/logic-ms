@@ -14,4 +14,6 @@ public interface ClientService {
     Client findByExternalId(UUID externalId);
 
     ClusterDto readCluster();
+
+    void deleteCluster();
 }
