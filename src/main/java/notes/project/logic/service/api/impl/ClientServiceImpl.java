@@ -5,9 +5,11 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import notes.project.logic.dto.api.ClusterDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
+import notes.project.logic.dto.integration.filesystem.FileSystemClusterDto;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
@@ -15,7 +17,9 @@ import notes.project.logic.repository.ClientRepository;
 import notes.project.logic.service.api.ClientService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.service.integration.http.UserDataSystemRestService;
+import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.cache.CacheConfigValue;
+import notes.project.logic.utils.mapper.ClusterDtoMapper;
 import notes.project.logic.utils.mapper.CreateClientMapper;
 import notes.project.logic.utils.mapper.PersonalInfoMapper;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,6 +36,8 @@ public class ClientServiceImpl implements ClientService {
     private final FileSystemRestService fileSystemRestService;
     private final UserDataSystemRestService userDataSystemRestService;
     private final PersonalInfoMapper personalInfoMapper;
+    private final AuthHelper authHelper;
+    private final ClusterDtoMapper clusterDtoMapper;
 
     @Override
     @Transactional
@@ -55,5 +61,14 @@ public class ClientServiceImpl implements ClientService {
         return repository.findByExternalId(externalId).orElseThrow(
             () -> new NotFoundException("Client with id " + externalId + " not found")
         );
+    }
+
+    @Override
+    @Transactional
+    public ClusterDto readCluster() {
+        UUID currentClientId = authHelper.getAuthorizedClientId();
+        Client client = findByExternalId(currentClientId);
+        FileSystemClusterDto fileSystemResponse = fileSystemRestService.readCluster(client.getClusterExternalId());
+        return clusterDtoMapper.to(fileSystemResponse);
     }
 }

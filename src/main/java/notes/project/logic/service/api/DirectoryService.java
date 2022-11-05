@@ -5,7 +5,7 @@ import java.util.UUID;
 import notes.project.logic.dto.api.CreateDirectoryRequestDto;
 import notes.project.logic.dto.api.CreateDirectoryResponseDto;
 import notes.project.logic.dto.api.DeleteHistoryResponseDto;
-import notes.project.logic.dto.api.DirectoryInfoDto;
+import notes.project.logic.dto.api.DirectoryDto;
 import notes.project.logic.model.Directory;
 
 public interface DirectoryService {
@@ -15,7 +15,7 @@ public interface DirectoryService {
 
     void deleteDirectory(UUID externalId);
 
-    DirectoryInfoDto readDirectory(UUID externalId);
+    DirectoryDto readDirectory(UUID externalId);
 
     DeleteHistoryResponseDto getDirectoryDeleteHistory(UUID externalId);
 }

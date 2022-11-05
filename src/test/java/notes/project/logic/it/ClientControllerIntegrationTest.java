@@ -77,4 +77,27 @@ class ClientControllerIntegrationTest extends AbstractIntegrationTest {
 
         JSONAssert.assertEquals(expected, actual, true);
     }
+
+    @Test
+    void readClusterSuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubKeycloakToken();
+
+        testEntityManager.merge(DbUtils.client());
+
+        stubFor(get(urlMatching("/cluster/e730fd34-78b9-41ab-8dd7-33c24c8fda23"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/filesystem/FileSystemClusterResponse.json"))
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/client"))
+            .andReturn().getResponse().getContentAsString();
+
+        String expected = TestUtils.getClasspathResource("/api/ClusterResponse.json");
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
 }
