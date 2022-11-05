@@ -3,6 +3,7 @@ package notes.project.logic.service.api;
 import java.util.Optional;
 
 import notes.project.logic.dto.api.ClusterDto;
+import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
@@ -14,6 +15,7 @@ import notes.project.logic.service.integration.http.UserDataSystemRestService;
 import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.ClusterDtoMapper;
 import notes.project.logic.utils.mapper.CreateClientMapper;
+import notes.project.logic.utils.mapper.DeleteHistoryResponseMapper;
 import notes.project.logic.utils.mapper.PersonalInfoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +52,8 @@ class ClientServiceImplTest {
             userDataSystemRestService,
             TestUtils.getComplexMapper(PersonalInfoMapper.class),
             authHelper,
-            TestUtils.getComplexMapper(ClusterDtoMapper.class)
+            TestUtils.getComplexMapper(ClusterDtoMapper.class),
+            TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class)
         );
     }
 
@@ -137,5 +140,23 @@ class ClientServiceImplTest {
 
         verify(authHelper).getAuthorizedClientId();
         verify(repository).findByExternalId(CLIENT_EXTERNAL_ID);
+    }
+
+    @Test
+    void getClusterDeleteHistorySuccess() {
+        DeleteHistoryResponseDto expected = ApiUtils.deleteHistoryResponseDto(CLUSTER_TITLE, CLUSTER_CREATE_DATE);
+
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(DbUtils.client()));
+        when(fileSystemRestService.getClusterDeleteHistory(any())).thenReturn(IntegrationTestUtils.fileSystemDeleteHistoryResponseDto(
+            CLUSTER_TITLE,
+            CLUSTER_CREATE_DATE
+        ));
+
+        DeleteHistoryResponseDto actual = service.getClusterDeleteHistory(CLIENT_EXTERNAL_ID);
+
+        assertEquals(expected, actual);
+
+        verify(repository).findByExternalId(CLIENT_EXTERNAL_ID);
+        verify(fileSystemRestService).getClusterDeleteHistory(CLUSTER_EXTERNAL_ID);
     }
 }

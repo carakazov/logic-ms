@@ -6,10 +6,12 @@ import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.ClusterDto;
+import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemClusterDto;
+import notes.project.logic.dto.integration.filesystem.FileSystemDeleteHistoryResponseDto;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
@@ -21,6 +23,7 @@ import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.cache.CacheConfigValue;
 import notes.project.logic.utils.mapper.ClusterDtoMapper;
 import notes.project.logic.utils.mapper.CreateClientMapper;
+import notes.project.logic.utils.mapper.DeleteHistoryResponseMapper;
 import notes.project.logic.utils.mapper.PersonalInfoMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,7 @@ public class ClientServiceImpl implements ClientService {
     private final PersonalInfoMapper personalInfoMapper;
     private final AuthHelper authHelper;
     private final ClusterDtoMapper clusterDtoMapper;
+    private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
 
     @Override
     @Transactional
@@ -76,6 +80,13 @@ public class ClientServiceImpl implements ClientService {
     public void deleteCluster() {
         Client client = getClientFromContext();
         fileSystemRestService.deleteCluster(client.getClusterExternalId());
+    }
+
+    @Override
+    public DeleteHistoryResponseDto getClusterDeleteHistory(UUID clientExternalId) {
+        Client client = findByExternalId(clientExternalId);
+        FileSystemDeleteHistoryResponseDto fileSystemResponse = fileSystemRestService.getClusterDeleteHistory(client.getClusterExternalId());
+        return deleteHistoryResponseMapper.to(fileSystemResponse);
     }
 
     private Client getClientFromContext() {

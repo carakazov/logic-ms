@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.ClusterDto;
+import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.service.api.ClientService;
 import notes.project.logic.utils.AuthHelper;
@@ -42,5 +43,12 @@ public class ClientController {
     @Secured("ROLE_USER")
     public void deleteCluster() {
         clientService.deleteCluster();
+    }
+
+    @GetMapping("/{id}/deleteHistory")
+    @ApiOperation("Запрос истории удалений и восстановлений всего контента клиента")
+    @Secured("ROLE_ADMIN")
+    public DeleteHistoryResponseDto getClusterDeleteHistory(@PathVariable(name = "id") @ApiParam(value = "Внешний ID клиента") UUID clientExternalId) {
+        return clientService.getClusterDeleteHistory(clientExternalId);
     }
 }

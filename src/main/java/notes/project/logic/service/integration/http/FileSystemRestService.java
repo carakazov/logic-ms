@@ -2,6 +2,7 @@ package notes.project.logic.service.integration.http;
 
 import java.util.UUID;
 
+import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.integration.filesystem.*;
 
 public interface FileSystemRestService {
@@ -36,4 +37,6 @@ public interface FileSystemRestService {
     FileSystemClusterDto readCluster(UUID externalId);
 
     void deleteCluster(UUID deleteCluster);
+
+    FileSystemDeleteHistoryResponseDto getClusterDeleteHistory(UUID externalId);
 }
