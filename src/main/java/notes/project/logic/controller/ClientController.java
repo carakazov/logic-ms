@@ -1,20 +1,18 @@
 package notes.project.logic.controller;
 
-import java.util.Map;
 import java.util.UUID;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import notes.project.logic.dto.api.ChangePersonalInfoRequestDto;
+import notes.project.logic.utils.mapper.dto.ChangePersonalInfoMappingDto;
 import notes.project.logic.dto.api.ClusterDto;
 import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.service.api.ClientService;
-import notes.project.logic.utils.AuthHelper;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -50,5 +48,12 @@ public class ClientController {
     @Secured("ROLE_ADMIN")
     public DeleteHistoryResponseDto getClusterDeleteHistory(@PathVariable(name = "id") @ApiParam(value = "Внешний ID клиента") UUID clientExternalId) {
         return clientService.getClusterDeleteHistory(clientExternalId);
+    }
+
+    @PutMapping
+    @ApiOperation("Обновление личных данных")
+    @Secured("ROLE_USER")
+    public PersonalInfoDto changePersonalInfo(@RequestBody ChangePersonalInfoRequestDto request) {
+        return clientService.changePersonalInfo(request);
     }
 }

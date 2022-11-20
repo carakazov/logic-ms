@@ -2,9 +2,11 @@ package notes.project.logic.service.api;
 
 import java.util.Optional;
 
+import io.swagger.annotations.Api;
 import notes.project.logic.dto.api.ClusterDto;
 import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
+import notes.project.logic.dto.integration.userdatasystem.UserDataSystemChangePersonalInfoRequestDto;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
 import notes.project.logic.repository.ClientRepository;
@@ -13,10 +15,7 @@ import notes.project.logic.service.api.impl.ClientServiceImpl;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.service.integration.http.UserDataSystemRestService;
 import notes.project.logic.utils.*;
-import notes.project.logic.utils.mapper.ClusterDtoMapper;
-import notes.project.logic.utils.mapper.CreateClientMapper;
-import notes.project.logic.utils.mapper.DeleteHistoryResponseMapper;
-import notes.project.logic.utils.mapper.PersonalInfoMapper;
+import notes.project.logic.utils.mapper.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,7 +52,8 @@ class ClientServiceImplTest {
             TestUtils.getComplexMapper(PersonalInfoMapper.class),
             authHelper,
             TestUtils.getComplexMapper(ClusterDtoMapper.class),
-            TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class)
+            TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class),
+            TestUtils.getComplexMapper(ChangePersonalInfoRequestMapper.class)
         );
     }
 
@@ -158,5 +158,22 @@ class ClientServiceImplTest {
 
         verify(repository).findByExternalId(CLIENT_EXTERNAL_ID);
         verify(fileSystemRestService).getClusterDeleteHistory(CLUSTER_EXTERNAL_ID);
+    }
+
+    @Test
+    void changePersonalInfoSuccess() {
+        PersonalInfoDto expected = ApiUtils.personalInfoDto();
+
+        UserDataSystemChangePersonalInfoRequestDto integrationRequest = IntegrationTestUtils.userDataSystemChangePersonalInfoRequestDto();
+
+        when(authHelper.getAuthorizedClientId()).thenReturn(CLIENT_EXTERNAL_ID);
+        when(userDataSystemRestService.changePersonalInfo(any())).thenReturn(IntegrationTestUtils.userDataSystemPersonalInfoDto());
+
+        PersonalInfoDto actual = service.changePersonalInfo(ApiUtils.changePersonalInfoRequestDto());
+
+        assertEquals(expected, actual);
+
+        verify(authHelper).getAuthorizedClientId();
+        verify(userDataSystemRestService).changePersonalInfo(integrationRequest);
     }
 }

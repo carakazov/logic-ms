@@ -1,0 +1,13 @@
+{
+  "newValues": {
+    "NEW_NAME": "name",
+    "NEW_SURNAME": "surname",
+    "NEW_MIDDLE_NAME": "middle name"
+  },
+  "changeAdditionalInfo": [
+    {
+      "type": "type",
+      "newValue": "value"
+    }
+  ]
+}
