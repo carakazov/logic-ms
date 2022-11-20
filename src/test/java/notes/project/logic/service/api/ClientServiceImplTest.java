@@ -3,6 +3,7 @@ package notes.project.logic.service.api;
 import java.util.Optional;
 
 import io.swagger.annotations.Api;
+import notes.project.logic.dto.api.AllClientsResponseDto;
 import notes.project.logic.dto.api.ClusterDto;
 import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
@@ -53,7 +54,9 @@ class ClientServiceImplTest {
             authHelper,
             TestUtils.getComplexMapper(ClusterDtoMapper.class),
             TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class),
-            TestUtils.getComplexMapper(ChangePersonalInfoRequestMapper.class)
+            TestUtils.getComplexMapper(ChangePersonalInfoRequestMapper.class),
+            TestUtils.getComplexMapper(AllClientsListMapper.class),
+            ApplicationPropertiesUtils.getApplicationPropertiesForClientService()
         );
     }
 
@@ -175,5 +178,18 @@ class ClientServiceImplTest {
 
         verify(authHelper).getAuthorizedClientId();
         verify(userDataSystemRestService).changePersonalInfo(integrationRequest);
+    }
+
+    @Test
+    void getAllClientsSuccess() {
+        AllClientsResponseDto expected = ApiUtils.allClientsResponseDto();
+
+        when(userDataSystemRestService.getAllClientsOfSystem(any())).thenReturn(IntegrationTestUtils.userDataSystemAllClientsResponseDto());
+
+        AllClientsResponseDto actual = service.getAllClients();
+
+        assertEquals(expected, actual);
+
+        verify(userDataSystemRestService).getAllClientsOfSystem(SYSTEM_NAME);
     }
 }

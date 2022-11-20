@@ -15,6 +15,12 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static UserDataSystemAllClientsResponseDto userDataSystemAllClientsResponseDto() {
+        return new UserDataSystemAllClientsResponseDto()
+            .setSystemName(SYSTEM_NAME)
+            .setClients(Collections.singletonList(userDataSystemPersonalInfoDto()));
+    }
+
     public static UserDataSystemChangePersonalInfoRequestDto userDataSystemChangePersonalInfoRequestDto() {
         return new UserDataSystemChangePersonalInfoRequestDto()
             .setClientExternalId(CLIENT_EXTERNAL_ID)

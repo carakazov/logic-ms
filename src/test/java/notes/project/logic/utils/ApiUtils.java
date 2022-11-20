@@ -17,6 +17,12 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static AllClientsResponseDto allClientsResponseDto() {
+        return new AllClientsResponseDto()
+            .setSystemName(SYSTEM_NAME)
+            .setClients(Collections.singletonList(personalInfoDto()));
+    }
+
     public static ChangePersonalInfoRequestDto changePersonalInfoRequestDto() {
         return new ChangePersonalInfoRequestDto()
             .setNewValues(

@@ -67,4 +67,5 @@ public class TestDataConstants {
     public static final String CURRENT_STATE = "CREATED";
     public static final String DELETE_HISTORY_EVENT = "CREATED";
     public static final LocalDateTime DELETE_HISTORY_EVENT_DATE = LocalDateTime.of(2022, 10, 10, 10, 10 ,10);
+    public static final String SYSTEM_NAME = "systemName";
 }

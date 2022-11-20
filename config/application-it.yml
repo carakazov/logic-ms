@@ -6,6 +6,7 @@ spring:
     username: sa
     password:
 application:
+  systemName: test-system-name
   errorMessages:
     internalError: internal error
     wrongRequestParameters: wrong request parameters

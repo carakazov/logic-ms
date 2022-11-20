@@ -175,4 +175,25 @@ class ClientControllerIntegrationTest extends AbstractIntegrationTest {
 
         JSONAssert.assertEquals(expected, actual, true);
     }
+
+    @Test
+    void getAllClientsSuccess() throws Exception {
+        setAuthentication(ROLE_ADMIN);
+        stubInternalToken();
+
+        stubFor(get(urlMatching("/clients/test-system-name/list"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/userdatasystem/AllClientsSystem.json"))
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        String expected = TestUtils.getClasspathResource("/api/AllClientsResponse.json");
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/client/list"))
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
 }

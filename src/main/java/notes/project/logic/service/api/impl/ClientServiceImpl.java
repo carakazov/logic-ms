@@ -6,11 +6,10 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import notes.project.logic.dto.api.ChangePersonalInfoRequestDto;
+import notes.project.logic.config.ApplicationProperties;
+import notes.project.logic.dto.api.*;
+import notes.project.logic.dto.integration.userdatasystem.UserDataSystemAllClientsResponseDto;
 import notes.project.logic.utils.mapper.dto.ChangePersonalInfoMappingDto;
-import notes.project.logic.dto.api.ClusterDto;
-import notes.project.logic.dto.api.DeleteHistoryResponseDto;
-import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemClusterDto;
@@ -44,6 +43,8 @@ public class ClientServiceImpl implements ClientService {
     private final ClusterDtoMapper clusterDtoMapper;
     private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
     private final ChangePersonalInfoRequestMapper changePersonalInfoRequestMapper;
+    private final AllClientsListMapper allClientsListMapper;
+    private final ApplicationProperties applicationProperties;
 
     @Override
     @Transactional
@@ -103,6 +104,14 @@ public class ClientServiceImpl implements ClientService {
         );
         UserDataSystemPersonalInfoDto userDataSystemResponse = userDataSystemRestService.changePersonalInfo(userDataSystemRequest);
         return personalInfoMapper.to(userDataSystemResponse);
+    }
+
+    @Override
+    @Transactional
+    public AllClientsResponseDto getAllClients() {
+        String systemName = applicationProperties.getSystemName();
+        UserDataSystemAllClientsResponseDto userDataSystemResponse = userDataSystemRestService.getAllClientsOfSystem(systemName);
+        return allClientsListMapper.to(userDataSystemResponse);
     }
 
     private Client getClientFromContext() {

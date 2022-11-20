@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 @Accessors(chain = true)
 public class ApplicationProperties {
 
+    private String systemName;
     private Map<String, String> errorMessages;
     private InternalServerProfile internalServerProfile;
     private KeycloakServerProfile keycloakServerProfile;
