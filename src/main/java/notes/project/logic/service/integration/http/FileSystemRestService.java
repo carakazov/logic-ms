@@ -28,7 +28,7 @@ public interface FileSystemRestService {
 
     FileSystemFileVersionDto getFileVersion(UUID externalId);
 
-    void deleteDirectory(UUID externalId);
+    void deleteDirectory(UUID externalId, UUID clusterExternalId);
 
     FileSystemDirectoryDto readDirectory(UUID externalId);
 
@@ -39,4 +39,10 @@ public interface FileSystemRestService {
     void deleteCluster(UUID deleteCluster);
 
     FileSystemDeleteHistoryResponseDto getClusterDeleteHistory(UUID externalId);
+
+    void recreateCluster(UUID externalId);
+
+    void recreateDirectory(UUID externalId, UUID clusterExternalId);
+
+    void recreateFile(UUID externalId, UUID directoryExternalId);
 }

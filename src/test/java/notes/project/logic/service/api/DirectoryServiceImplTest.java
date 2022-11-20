@@ -94,7 +94,7 @@ class DirectoryServiceImplTest {
         service.deleteDirectory(DIRECTORY_EXTERNAL_ID);
 
         verify(repository).findByExternalId(DIRECTORY_EXTERNAL_ID);
-        verify(fileSystemRestService).deleteDirectory(DIRECTORY_EXTERNAL_ID);
+        verify(fileSystemRestService).deleteDirectory(DIRECTORY_EXTERNAL_ID, CLUSTER_EXTERNAL_ID);
     }
 
     @Test

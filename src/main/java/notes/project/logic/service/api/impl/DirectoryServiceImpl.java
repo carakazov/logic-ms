@@ -65,7 +65,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     public void deleteDirectory(UUID externalId) {
         Directory directory = findDirectoryByExternalId(externalId);
         deleteDirectoryValidator.validate(new DeleteDirectoryValidationDto(authHelper.getAuthorizedClientId(), directory));
-        fileSystemRestService.deleteDirectory(directory.getExternalId());
+        fileSystemRestService.deleteDirectory(directory.getExternalId(), directory.getClient().getClusterExternalId());
     }
 
     @Override

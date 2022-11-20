@@ -79,4 +79,16 @@ public interface FileSystemFeignClient {
     @GetMapping("/cluster/{id}/deleteHistory")
     @TokenRequest
     ResponseEntity<FileSystemDeleteHistoryResponseDto> getClusterDeleteHistory(@PathVariable(name = "id") UUID externalId);
+
+    @PutMapping("/recreate/cluster/{id}")
+    @TokenRequest
+    ResponseEntity<Void> recreateCluster(@PathVariable(name = "id") UUID externalId);
+
+    @PutMapping("/recreate/directory/{id}")
+    @TokenRequest
+    ResponseEntity<Void> recreateDirectory(@PathVariable(name = "id") UUID externalId);
+
+    @PutMapping("/recreate/file/{id}")
+    @TokenRequest
+    ResponseEntity<Void> recreateNote(@PathVariable(name = "id") UUID externalId);
 }
