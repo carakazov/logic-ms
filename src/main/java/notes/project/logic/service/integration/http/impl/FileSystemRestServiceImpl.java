@@ -3,6 +3,8 @@ package notes.project.logic.service.integration.http.impl;
 import java.util.UUID;
 
 import feign.FeignException;
+import liquibase.pro.packaged.C;
+import liquibase.pro.packaged.V;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.DeleteHistoryResponseDto;
@@ -174,10 +176,10 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
         evict = {
             @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.EXTERNAL_ID),
             @CacheEvict(value = CacheConfigValue.DIRECTORY_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID),
-            @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.EXTERNAL_ID)
+            @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.CLUSTER_EXTERNAL_ID)
         }
     )
-    public void deleteDirectory(UUID externalId) {
+    public void deleteDirectory(UUID externalId, UUID clusterExternalId) {
         ResponseEntity<Void> response;
         try {
             response = client.deleteDirectory(externalId);
@@ -251,5 +253,47 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
        }
        checkResponse(response);
        return response.getBody();
+    }
+
+    @Override
+    @CacheEvict(value = CacheConfigValue.CLUSTER_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID)
+    public void recreateCluster(UUID externalId) {
+        ResponseEntity<Void> response;
+        try {
+            response = client.recreateCluster(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+    }
+
+    @Override
+    @Caching(evict = {
+        @CacheEvict(value = CacheConfigValue.DIRECTORY_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID),
+        @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.CLUSTER_EXTERNAL_ID)
+    })
+    public void recreateDirectory(UUID externalId, UUID clusterExternalId) {
+        ResponseEntity<Void> response;
+        try {
+            response = client.recreateDirectory(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
+    }
+
+    @Override
+    @Caching(evict = {
+        @CacheEvict(value = CacheConfigValue.NOTE_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID),
+        @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.DIRECTORY_EXTERNAL_ID)
+    })
+    public void recreateFile(UUID externalId, UUID directoryExternalId) {
+        ResponseEntity<Void> response;
+        try {
+            response = client.recreateNote(externalId);
+        } catch(FeignException exception) {
+            throw handleFeignException(exception);
+        }
+        checkResponse(response);
     }
 }
