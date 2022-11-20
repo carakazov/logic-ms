@@ -3,6 +3,7 @@ package notes.project.logic.utils.cache;
 public interface CacheConfigValue {
     String REQUEST_DIRECTORY_EXTERNAL_ID = "#request.directoryExternalId";
     String REQUEST_CLUSTER_EXTERNAL_ID = "#request.clusterExternalId";
+    String REQUEST_CLIENT_EXTERNAL_ID = "#request.clientExternalId";
     String EXTERNAL_ID = "#externalId";
     String PERSONAL_INFO = "personalInfo";
     String NOTE_LIST = "notes";

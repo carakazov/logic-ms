@@ -2,11 +2,12 @@ package notes.project.logic.utils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Map;
 
 import lombok.experimental.UtilityClass;
+import notes.project.logic.dto.api.ChangeAdditionalInfoDto;
 import notes.project.logic.dto.integration.filesystem.*;
-import notes.project.logic.dto.integration.userdatasystem.UserDataSystemAdditionalInfoDto;
-import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
+import notes.project.logic.dto.integration.userdatasystem.*;
 import notes.project.logic.oauth.dto.InternalServerTokenResponseDto;
 import notes.project.logic.oauth.dto.KeycloakServerTokenResponseDto;
 
@@ -14,6 +15,31 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static UserDataSystemChangePersonalInfoRequestDto userDataSystemChangePersonalInfoRequestDto() {
+        return new UserDataSystemChangePersonalInfoRequestDto()
+            .setClientExternalId(CLIENT_EXTERNAL_ID)
+            .setClientInfo(userDataSystemChangePersonalInfoDto());
+    }
+
+    public static UserDataSystemChangePersonalInfoDto userDataSystemChangePersonalInfoDto() {
+        return new UserDataSystemChangePersonalInfoDto()
+            .setNewValues(
+                Map.of(
+                    ChangePersonalInfoMarker.NEW_NAME, CLIENT_NAME,
+                    ChangePersonalInfoMarker.NEW_SURNAME, CLIENT_SURNAME,
+                    ChangePersonalInfoMarker.NEW_MIDDLE_NAME, CLIENT_MIDDLE_NAME
+                )
+            ).setChangeAdditionalInfo(
+                Collections.singletonList(userDataSystemChangeAdditionalInfoDto())
+            );
+    }
+
+    public static UserDataSystemChangeAdditionalInfoDto userDataSystemChangeAdditionalInfoDto() {
+        return new UserDataSystemChangeAdditionalInfoDto()
+            .setType(CLIENT_ADDITIONAL_INFO_TYPE)
+            .setNewValue(CLIENT_ADDITIONAL_INFO_VALUE);
+    }
+
     public static FileSystemClusterDto fileSystemClusterDto() {
         return new FileSystemClusterDto()
             .setTitle(CLUSTER_TITLE)

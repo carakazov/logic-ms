@@ -1,10 +1,13 @@
 package notes.project.logic.service.api.impl;
 
+import java.rmi.server.UID;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import notes.project.logic.dto.api.ChangePersonalInfoRequestDto;
+import notes.project.logic.utils.mapper.dto.ChangePersonalInfoMappingDto;
 import notes.project.logic.dto.api.ClusterDto;
 import notes.project.logic.dto.api.DeleteHistoryResponseDto;
 import notes.project.logic.dto.api.PersonalInfoDto;
@@ -12,6 +15,7 @@ import notes.project.logic.dto.integration.filesystem.CreateClusterRequestDto;
 import notes.project.logic.dto.integration.filesystem.CreateClusterResponseDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemClusterDto;
 import notes.project.logic.dto.integration.filesystem.FileSystemDeleteHistoryResponseDto;
+import notes.project.logic.dto.integration.userdatasystem.UserDataSystemChangePersonalInfoRequestDto;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
@@ -21,10 +25,7 @@ import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.service.integration.http.UserDataSystemRestService;
 import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.cache.CacheConfigValue;
-import notes.project.logic.utils.mapper.ClusterDtoMapper;
-import notes.project.logic.utils.mapper.CreateClientMapper;
-import notes.project.logic.utils.mapper.DeleteHistoryResponseMapper;
-import notes.project.logic.utils.mapper.PersonalInfoMapper;
+import notes.project.logic.utils.mapper.*;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ public class ClientServiceImpl implements ClientService {
     private final AuthHelper authHelper;
     private final ClusterDtoMapper clusterDtoMapper;
     private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
+    private final ChangePersonalInfoRequestMapper changePersonalInfoRequestMapper;
 
     @Override
     @Transactional
@@ -87,6 +89,20 @@ public class ClientServiceImpl implements ClientService {
         Client client = findByExternalId(clientExternalId);
         FileSystemDeleteHistoryResponseDto fileSystemResponse = fileSystemRestService.getClusterDeleteHistory(client.getClusterExternalId());
         return deleteHistoryResponseMapper.to(fileSystemResponse);
+    }
+
+    @Override
+    @Transactional
+    public PersonalInfoDto changePersonalInfo(ChangePersonalInfoRequestDto request) {
+        UUID clientExternalId = authHelper.getAuthorizedClientId();
+        UserDataSystemChangePersonalInfoRequestDto userDataSystemRequest = changePersonalInfoRequestMapper.to(
+            new ChangePersonalInfoMappingDto(
+                clientExternalId,
+                request
+            )
+        );
+        UserDataSystemPersonalInfoDto userDataSystemResponse = userDataSystemRestService.changePersonalInfo(userDataSystemRequest);
+        return personalInfoMapper.to(userDataSystemResponse);
     }
 
     private Client getClientFromContext() {

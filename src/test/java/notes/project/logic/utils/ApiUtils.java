@@ -2,10 +2,12 @@ package notes.project.logic.utils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Map;
 
 import lombok.experimental.UtilityClass;
 import notes.project.logic.dto.*;
 import notes.project.logic.dto.api.*;
+import notes.project.logic.dto.integration.userdatasystem.ChangePersonalInfoMarker;
 import notes.project.logic.exception.ExceptionCode;
 import notes.project.logic.exception.ValidationException;
 import notes.project.logic.model.AccessMode;
@@ -15,6 +17,23 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static ChangePersonalInfoRequestDto changePersonalInfoRequestDto() {
+        return new ChangePersonalInfoRequestDto()
+            .setNewValues(
+                Map.of(
+                    ChangePersonalInfoMarker.NEW_NAME, CLIENT_NAME,
+                    ChangePersonalInfoMarker.NEW_SURNAME, CLIENT_SURNAME,
+                    ChangePersonalInfoMarker.NEW_MIDDLE_NAME, CLIENT_MIDDLE_NAME
+                )
+            ).setChangeAdditionalInfo(Collections.singletonList(changeAdditionalInfoDto()));
+    }
+
+    public static ChangeAdditionalInfoDto changeAdditionalInfoDto() {
+        return new ChangeAdditionalInfoDto()
+            .setType(CLIENT_ADDITIONAL_INFO_TYPE)
+            .setNewValue(CLIENT_ADDITIONAL_INFO_VALUE);
+    }
+
     public static ClusterDto clusterDto() {
         return new ClusterDto()
             .setTitle(CLUSTER_TITLE)

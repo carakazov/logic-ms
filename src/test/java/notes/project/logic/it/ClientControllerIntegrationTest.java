@@ -20,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -145,6 +146,32 @@ class ClientControllerIntegrationTest extends AbstractIntegrationTest {
 
         String actual = mockMvc.perform(MockMvcRequestBuilders.get("/client/1c7b68c7-df51-4f95-b90f-8cb9748e3635/deleteHistory"))
             .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
+
+    @Test
+    void changePersonalInfoSuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubInternalToken();
+
+        testEntityManager.merge(DbUtils.client());
+
+        stubFor(put(urlMatching("/client"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/userdatasystem/UserDataResponse.json"))
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        String expected = TestUtils.getClasspathResource("/integration/userdatasystem/UserDataResponse.json");
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.put("/client")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtils.getClasspathResource("/api/ChangePersonalInfoRequest.json")
+            )
+        ).andReturn().getResponse().getContentAsString();
 
         JSONAssert.assertEquals(expected, actual, true);
     }
