@@ -1,7 +1,9 @@
 package notes.project.logic.service.integration.http.client;
 
+import java.util.List;
 import java.util.UUID;
 
+import notes.project.logic.dto.integration.userdatasystem.UserDataSystemAllClientsResponseDto;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemChangePersonalInfoRequestDto;
 import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
 import notes.project.logic.oauth.TokenSource;
@@ -22,4 +24,8 @@ public interface UserDataSystemFeignClient {
     @PutMapping("/client")
     @TokenRequest(tokenSource = TokenSource.INTERNAL_SERVER)
     ResponseEntity<UserDataSystemPersonalInfoDto> changePersonalInfo(@RequestBody UserDataSystemChangePersonalInfoRequestDto request);
+
+    @GetMapping("/clients/{systemName}/list")
+    @TokenRequest(tokenSource = TokenSource.INTERNAL_SERVER)
+    ResponseEntity<UserDataSystemAllClientsResponseDto> getAllClientsOfSystem(@PathVariable(name = "systemName") String systemName);
 }

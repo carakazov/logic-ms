@@ -6,11 +6,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import notes.project.logic.dto.api.ChangePersonalInfoRequestDto;
+import notes.project.logic.dto.api.*;
 import notes.project.logic.utils.mapper.dto.ChangePersonalInfoMappingDto;
-import notes.project.logic.dto.api.ClusterDto;
-import notes.project.logic.dto.api.DeleteHistoryResponseDto;
-import notes.project.logic.dto.api.PersonalInfoDto;
 import notes.project.logic.service.api.ClientService;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -56,4 +53,12 @@ public class ClientController {
     public PersonalInfoDto changePersonalInfo(@RequestBody ChangePersonalInfoRequestDto request) {
         return clientService.changePersonalInfo(request);
     }
+
+    @GetMapping("/list")
+    @ApiOperation("Получение всех клиентов системы")
+    @Secured("ROLE_ADMIN")
+    public AllClientsResponseDto getAllClients() {
+        return clientService.getAllClients();
+    }
+
 }

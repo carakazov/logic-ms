@@ -17,4 +17,5 @@ public interface CacheConfigValue {
     String CLUSTER_DELETE_HISTORY = "clusterDeleteHistory";
     String CLUSTER_EXTERNAL_ID = "#clusterExternalId";
     String DIRECTORY_EXTERNAL_ID = "#directoryExternalId";
+    String ALL_CLIENTS_LIST = "allClientsList";
 }

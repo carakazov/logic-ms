@@ -11,6 +11,11 @@ public class ApplicationPropertiesUtils {
         return new ApplicationProperties();
     }
 
+    public static ApplicationProperties getApplicationPropertiesForClientService() {
+        return new ApplicationProperties()
+            .setSystemName(SYSTEM_NAME);
+    }
+
     public static ApplicationProperties applicationPropertiesForInternalServerOauthRestService() {
         return new ApplicationProperties()
             .setInternalServerProfile(

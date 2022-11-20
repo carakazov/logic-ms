@@ -36,6 +36,7 @@ spring:
             max-attempts: 1
 
 application:
+  systemName: file-system
   errorMessages:
     internalError: internal error
     wrongRequestParameters: wrong request parameters
