@@ -42,6 +42,7 @@ public class NoteServiceImpl implements NoteService {
     private final ReplacingHistoryResponseMapper replacingHistoryResponseMapper;
     private final NoteVersionMapper noteVersionMapper;
     private final Validator<MoveNoteValidationDto> moveNoteValidator;
+    private final Validator<OwningValidationDto> owningValidator;
 
     @Override
     @Transactional
@@ -135,5 +136,17 @@ public class NoteServiceImpl implements NoteService {
     public NoteVersionResponseDto getNoteVersion(UUID externalId) {
         FileSystemFileVersionDto fileSystemResponse = fileSystemRestService.getFileVersion(externalId);
         return noteVersionMapper.to(fileSystemResponse);
+    }
+
+    @Override
+    @Transactional
+    public void changeAccess(ChangeAccessModeRequestDto request) {
+        Note note = findByExternalId(request.getNoteExternalId());
+        Client client = clientService.findByExternalId(request.getClientExternalId());
+        owningValidator.validate(new OwningValidationDto(
+            authHelper.getAuthorizedClientId(),
+            note.getClient().getExternalId()
+        ));
+        accessService.addAccess(note, client, request.getAccessMode());
     }
 }

@@ -5,6 +5,8 @@ import javax.inject.Inject;
 import liquibase.pro.packaged.D;
 import notes.project.logic.controller.DirectoryController;
 import notes.project.logic.controller.NoteController;
+import notes.project.logic.model.Access;
+import notes.project.logic.model.AccessMode;
 import notes.project.logic.model.Note;
 import notes.project.logic.utils.DbUtils;
 import notes.project.logic.utils.IntegrationTestUtils;
@@ -276,5 +278,26 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
             .andReturn().getResponse().getContentAsString();
 
         JSONAssert.assertEquals(expected, actual, true);
+    }
+
+    @Test
+    void changeNoteAccessSuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+
+        testEntityManager.merge(DbUtils.client());
+        testEntityManager.merge(DbUtils.directory());
+        testEntityManager.merge(DbUtils.note());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/note/changeAccess")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtils.getClasspathResource("/api/ChangeAccessRequest.json"))
+        ).andExpect(status().isOk());
+
+        Access access = testEntityManager.getEntityManager().createQuery(
+            "select access from access access",
+            Access.class
+        ).getSingleResult();
+
+        assertNotNull(access);
     }
 }

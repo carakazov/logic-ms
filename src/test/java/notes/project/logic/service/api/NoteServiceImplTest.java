@@ -16,6 +16,8 @@ import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.*;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.*;
+import notes.project.logic.validation.impl.OwningValidator;
+import org.apache.zookeeper.Op;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,6 +56,8 @@ class NoteServiceImplTest {
     private Validator<DeleteNoteValidationDto> deleteNoteValidator;
     @Mock
     private Validator<MoveNoteValidationDto> moveNoteValidator;
+    @Mock
+    private Validator<OwningValidationDto> owningValidator;
 
     private NoteService service;
 
@@ -78,7 +82,8 @@ class NoteServiceImplTest {
             TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class),
             TestUtils.getComplexMapper(ReplacingHistoryResponseMapper.class),
             Mappers.getMapper(NoteVersionMapper.class),
-            moveNoteValidator
+            moveNoteValidator,
+            owningValidator
         );
     }
 
@@ -226,5 +231,21 @@ class NoteServiceImplTest {
         assertEquals(expected, actual);
 
         verify(fileSystemRestService).getFileVersion(NOTE_EXTERNAL_ID);
+    }
+
+    @Test
+    void changeAccessSuccess() {
+        ChangeAccessModeRequestDto request = ApiUtils.changeAccessModeRequestDto();
+        Note note = DbUtils.note();
+        Client client = DbUtils.client();
+
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(note));
+        when(clientService.findByExternalId(any())).thenReturn(client);
+
+        service.changeAccess(request);
+
+        verify(repository).findByExternalId(request.getNoteExternalId());
+        verify(clientService).findByExternalId(request.getClientExternalId());
+        verify(accessService).addAccess(note, client, request.getAccessMode());
     }
 }

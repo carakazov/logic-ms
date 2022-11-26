@@ -25,4 +25,6 @@ public interface NoteService {
     NoteReplacingHistoryResponseDto getNoteReplacingHistory(UUID externalId);
 
     NoteVersionResponseDto getNoteVersion(UUID externalId);
+
+    void changeAccess(ChangeAccessModeRequestDto request);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import notes.project.logic.dto.api.ChangeAccessModeRequestDto;
 import notes.project.logic.model.Access;
 import notes.project.logic.model.AccessMode;
 import notes.project.logic.model.Client;
@@ -11,6 +12,8 @@ import notes.project.logic.model.Note;
 import notes.project.logic.repository.AccessRepository;
 import notes.project.logic.service.api.AccessService;
 import notes.project.logic.utils.mapper.AccessMapper;
+import notes.project.logic.validation.Validator;
+import notes.project.logic.validation.dto.OwningValidationDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class AccessServiceImpl implements AccessService {
     private final AccessRepository repository;
     private final AccessMapper accessMapper;
+    private final Validator<OwningValidationDto> owningValidator;
 
     @Override
     public Access getAccessOfClientToNote(Client client, Note note) {

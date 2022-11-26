@@ -79,7 +79,16 @@ public class NoteController {
     }
 
     @GetMapping("/{externalId}/version")
+    @ApiOperation(value = "Запрос версии записки")
+    @Secured("ROLE_ADMIN")
     public NoteVersionResponseDto getNoteVersion(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID версии") UUID externalId) {
         return noteService.getNoteVersion(externalId);
+    }
+
+    @PostMapping("/changeAccess")
+    @ApiOperation(value = "Смена доступа к записке")
+    @Secured("ROLE_USER")
+    public void changeNoteAccess(@RequestBody ChangeAccessModeRequestDto request) {
+        noteService.changeAccess(request);
     }
 }
