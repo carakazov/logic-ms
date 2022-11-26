@@ -44,8 +44,6 @@ class DirectoryServiceImplTest {
     @Mock
     private AuthHelper authHelper;
     @Mock
-    private Validator<DeleteDirectoryValidationDto> deleteDirectoryValidator;
-    @Mock
     private Validator<OwningValidationDto> owningValidator;
 
     private DirectoryService service;
@@ -58,7 +56,6 @@ class DirectoryServiceImplTest {
             Mappers.getMapper(CreateDirectoryMapper.class),
             clientService,
             authHelper,
-            deleteDirectoryValidator,
             TestUtils.getComplexMapper(DirectoryDtoMapper.class),
             owningValidator,
             TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class)

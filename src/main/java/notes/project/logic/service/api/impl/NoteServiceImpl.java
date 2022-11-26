@@ -35,8 +35,6 @@ public class NoteServiceImpl implements NoteService {
     private final AccessService accessService;
     private final Validator<UpdateNoteValidationDto> updateNoteValidator;
     private final UpdateNoteMapper updateNoteMapper;
-    private final Validator<CreateNoteValidationDto> createNoteValidator;
-    private final Validator<DeleteNoteValidationDto> deleteNoteValidator;
     private final NoteHistoryResponseMapper noteHistoryResponseMapper;
     private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
     private final ReplacingHistoryResponseMapper replacingHistoryResponseMapper;
@@ -49,7 +47,10 @@ public class NoteServiceImpl implements NoteService {
     public CreateNoteResponseDto createNote(CreateNoteRequestDto request) {
         UUID clientId = authHelper.getAuthorizedClientId();
         Directory directory = directoryService.findDirectoryByExternalId(request.getDirectoryExternalId());
-        createNoteValidator.validate(new CreateNoteValidationDto(directory, clientId));
+        owningValidator.validate(new OwningValidationDto(
+            clientId,
+            directory.getClient().getExternalId()
+        ));
         FileSystemCreateFileResponseDto fileSystemResponse = fileSystemRestService.createFile(createFileMapper.toRequest(request));
         CreateNoteResponseDto response = createFileMapper.toResponse(fileSystemResponse);
         Client client = clientService.findByExternalId(clientId);
@@ -104,9 +105,9 @@ public class NoteServiceImpl implements NoteService {
     @Transactional
     public void deleteNote(UUID externalId) {
         Note note = findByExternalId(externalId);
-        deleteNoteValidator.validate(new DeleteNoteValidationDto(
-            note,
-            authHelper.getAuthorizedClientId()
+        owningValidator.validate(new OwningValidationDto(
+            authHelper.getAuthorizedClientId(),
+            note.getClient().getExternalId()
         ));
 
         fileSystemRestService.deleteFile(externalId);

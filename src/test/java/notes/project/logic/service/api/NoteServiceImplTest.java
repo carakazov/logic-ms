@@ -51,10 +51,6 @@ class NoteServiceImplTest {
     @Mock
     private Validator<UpdateNoteValidationDto> updateNoteValidator;
     @Mock
-    private Validator<CreateNoteValidationDto> createNoteValidator;
-    @Mock
-    private Validator<DeleteNoteValidationDto> deleteNoteValidator;
-    @Mock
     private Validator<MoveNoteValidationDto> moveNoteValidator;
     @Mock
     private Validator<OwningValidationDto> owningValidator;
@@ -76,8 +72,6 @@ class NoteServiceImplTest {
             accessService,
             updateNoteValidator,
             Mappers.getMapper(UpdateNoteMapper.class),
-            createNoteValidator,
-            deleteNoteValidator,
             TestUtils.getComplexMapper(NoteHistoryResponseMapper.class),
             TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class),
             TestUtils.getComplexMapper(ReplacingHistoryResponseMapper.class),
