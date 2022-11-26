@@ -36,7 +36,6 @@ public class DirectoryServiceImpl implements DirectoryService {
     private final CreateDirectoryMapper createDirectoryMapper;
     private final ClientService clientService;
     private final AuthHelper authHelper;
-    private final Validator<DeleteDirectoryValidationDto> deleteDirectoryValidator;
     private final DirectoryDtoMapper directoryDtoMapper;
     private final Validator<OwningValidationDto> owningValidator;
     private final DeleteHistoryResponseMapper deleteHistoryResponseMapper;
@@ -62,9 +61,10 @@ public class DirectoryServiceImpl implements DirectoryService {
     }
 
     @Override
+    @Transactional
     public void deleteDirectory(UUID externalId) {
         Directory directory = findDirectoryByExternalId(externalId);
-        deleteDirectoryValidator.validate(new DeleteDirectoryValidationDto(authHelper.getAuthorizedClientId(), directory));
+        owningValidator.validate(new OwningValidationDto(authHelper.getAuthorizedClientId(), directory.getClient().getExternalId()));
         fileSystemRestService.deleteDirectory(directory.getExternalId(), directory.getClient().getClusterExternalId());
     }
 
@@ -78,6 +78,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     }
 
     @Override
+    @Transactional
     public DeleteHistoryResponseDto getDirectoryDeleteHistory(UUID externalId) {
         Directory directory = findDirectoryByExternalId(externalId);
         FileSystemDeleteHistoryResponseDto fileSystemResponse = fileSystemRestService.getDirectoryDeleteHistory(directory.getExternalId());
