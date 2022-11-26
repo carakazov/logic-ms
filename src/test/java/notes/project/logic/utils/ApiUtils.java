@@ -17,6 +17,13 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static ChangeAccessModeRequestDto changeAccessModeRequestDto() {
+        return new ChangeAccessModeRequestDto()
+            .setNoteExternalId(NOTE_EXTERNAL_ID)
+            .setClientExternalId(CLIENT_EXTERNAL_ID)
+            .setAccessMode(AccessMode.READ);
+    }
+
     public static AllClientsResponseDto allClientsResponseDto() {
         return new AllClientsResponseDto()
             .setSystemName(SYSTEM_NAME)

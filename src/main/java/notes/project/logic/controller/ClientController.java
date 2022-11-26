@@ -56,7 +56,7 @@ public class ClientController {
 
     @GetMapping("/list")
     @ApiOperation("Получение всех клиентов системы")
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public AllClientsResponseDto getAllClients() {
         return clientService.getAllClients();
     }

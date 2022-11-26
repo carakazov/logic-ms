@@ -2,6 +2,7 @@ package notes.project.logic.service.api;
 
 import java.util.List;
 
+import notes.project.logic.dto.api.ChangeAccessModeRequestDto;
 import notes.project.logic.model.Access;
 import notes.project.logic.model.AccessMode;
 import notes.project.logic.model.Client;
