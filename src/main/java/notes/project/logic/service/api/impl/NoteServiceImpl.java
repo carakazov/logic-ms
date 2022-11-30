@@ -1,11 +1,14 @@
 package notes.project.logic.service.api.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.*;
 import notes.project.logic.dto.integration.filesystem.*;
+import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.*;
 import notes.project.logic.repository.NoteRepository;
@@ -14,8 +17,11 @@ import notes.project.logic.service.api.ClientService;
 import notes.project.logic.service.api.DirectoryService;
 import notes.project.logic.service.api.NoteService;
 import notes.project.logic.service.integration.http.FileSystemRestService;
+import notes.project.logic.service.integration.http.UserDataSystemRestService;
 import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.mapper.*;
+import notes.project.logic.utils.mapper.dto.AccessorMappingDto;
+import notes.project.logic.utils.mapper.dto.AccessorsResponseMappingDto;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.*;
 import org.springframework.stereotype.Service;
@@ -41,6 +47,8 @@ public class NoteServiceImpl implements NoteService {
     private final NoteVersionMapper noteVersionMapper;
     private final Validator<MoveNoteValidationDto> moveNoteValidator;
     private final Validator<OwningValidationDto> owningValidator;
+    private final UserDataSystemRestService userDataSystemRestService;
+    private final AccessorsResponseMapper accessorsResponseMapper;
 
     @Override
     @Transactional
@@ -149,5 +157,18 @@ public class NoteServiceImpl implements NoteService {
             note.getClient().getExternalId()
         ));
         accessService.addAccess(note, client, request.getAccessMode());
+    }
+
+    @Override
+    public AccessorsListResponseDto getAllNoteAccessors(UUID noteExternalId) {
+        Note note = findByExternalId(noteExternalId);
+        owningValidator.validate(new OwningValidationDto(authHelper.getAuthorizedClientId(), note.getClient().getExternalId()));
+        List<Access> accesses = accessService.getAllAccessesToNote(note);
+        List<AccessorMappingDto> accessors = new ArrayList<>();
+        accesses.forEach(item -> {
+            UserDataSystemPersonalInfoDto clientInfo = userDataSystemRestService.getPersonalInfo(item.getClient().getExternalId());
+            accessors.add(new AccessorMappingDto(clientInfo, item));
+        });
+        return accessorsResponseMapper.to(new AccessorsResponseMappingDto(note, accessors));
     }
 }

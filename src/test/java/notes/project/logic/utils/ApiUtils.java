@@ -17,6 +17,21 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class ApiUtils {
+    public static AccessorsListResponseDto accessorsListResponseDto() {
+        return new AccessorsListResponseDto()
+            .setExternalId(NOTE_EXTERNAL_ID)
+            .setAccessors(Collections.singletonList(accessorDto()));
+    }
+
+    public static AccessorDto accessorDto() {
+        return new AccessorDto()
+            .setExternalId(CLIENT_EXTERNAL_ID)
+            .setName(CLIENT_NAME)
+            .setSurname(CLIENT_SURNAME)
+            .setMiddleName(CLIENT_MIDDLE_NAME)
+            .setAccessMode(AccessMode.READ_WRITE);
+    }
+
     public static ChangeAccessModeRequestDto changeAccessModeRequestDto() {
         return new ChangeAccessModeRequestDto()
             .setNoteExternalId(NOTE_EXTERNAL_ID)

@@ -1,17 +1,21 @@
 package notes.project.logic.service.api;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import io.swagger.annotations.Api;
 import notes.project.logic.dto.api.*;
+import notes.project.logic.dto.integration.userdatasystem.UserDataSystemPersonalInfoDto;
 import notes.project.logic.model.Access;
 import notes.project.logic.model.Client;
 import notes.project.logic.model.Note;
 import notes.project.logic.repository.NoteRepository;
 import notes.project.logic.service.api.impl.NoteServiceImpl;
 import notes.project.logic.service.integration.http.FileSystemRestService;
+import notes.project.logic.service.integration.http.UserDataSystemRestService;
 import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.*;
 import notes.project.logic.validation.Validator;
@@ -54,6 +58,8 @@ class NoteServiceImplTest {
     private Validator<MoveNoteValidationDto> moveNoteValidator;
     @Mock
     private Validator<OwningValidationDto> owningValidator;
+    @Mock
+    private UserDataSystemRestService userDataSystemRestService;
 
     private NoteService service;
 
@@ -77,7 +83,9 @@ class NoteServiceImplTest {
             TestUtils.getComplexMapper(ReplacingHistoryResponseMapper.class),
             Mappers.getMapper(NoteVersionMapper.class),
             moveNoteValidator,
-            owningValidator
+            owningValidator,
+            userDataSystemRestService,
+            TestUtils.getComplexMapper(AccessorsResponseMapper.class)
         );
     }
 
@@ -241,5 +249,28 @@ class NoteServiceImplTest {
         verify(repository).findByExternalId(request.getNoteExternalId());
         verify(clientService).findByExternalId(request.getClientExternalId());
         verify(accessService).addAccess(note, client, request.getAccessMode());
+    }
+
+    @Test
+    void getAllAccessorsSuccess() {
+        AccessorsListResponseDto expected = ApiUtils.accessorsListResponseDto();
+
+        Note note = DbUtils.note();
+        List<Access> accesses = Collections.singletonList(DbUtils.access());
+        UserDataSystemPersonalInfoDto clientInfo = IntegrationTestUtils.userDataSystemPersonalInfoDto();
+
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(note));
+        when(authHelper.getAuthorizedClientId()).thenReturn(CLIENT_EXTERNAL_ID);
+        when(accessService.getAllAccessesToNote(any())).thenReturn(accesses);
+        when(userDataSystemRestService.getPersonalInfo(any())).thenReturn(clientInfo);
+
+        AccessorsListResponseDto actual = service.getAllNoteAccessors(NOTE_EXTERNAL_ID);
+
+        assertEquals(expected, actual);
+
+        verify(repository).findByExternalId(NOTE_EXTERNAL_ID);
+        verify(authHelper).getAuthorizedClientId();
+        verify(accessService).getAllAccessesToNote(note);
+        verify(userDataSystemRestService).getPersonalInfo(CLIENT_EXTERNAL_ID);
     }
 }
