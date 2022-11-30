@@ -14,4 +14,6 @@ public interface AccessService {
     Access getAccessOfClientToNote(Client client, Note note);
 
     Boolean clientHasAccessToNote(Client client, Note note);
+
+    List<Access> getAllAccessesToNote(Note note);
 }

@@ -91,4 +91,11 @@ public class NoteController {
     public void changeNoteAccess(@RequestBody ChangeAccessModeRequestDto request) {
         noteService.changeAccess(request);
     }
+
+    @GetMapping("/{externalId}/accessors")
+    @ApiOperation(value = "Запрос все доступов к записке")
+    @Secured("ROLE_USER")
+    public AccessorsListResponseDto getAllAccessorsToNote(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID записки") UUID externalId) {
+        return noteService.getAllNoteAccessors(externalId);
+    }
 }

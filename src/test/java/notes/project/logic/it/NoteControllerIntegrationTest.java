@@ -27,6 +27,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -299,5 +300,33 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
         ).getSingleResult();
 
         assertNotNull(access);
+    }
+
+    @Test
+    void getAllAccessorsToNoteSuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubInternalToken();
+
+        testEntityManager.merge(DbUtils.client());
+        testEntityManager.merge(DbUtils.directory());
+        testEntityManager.merge(DbUtils.note());
+        testEntityManager.merge(DbUtils.access());
+
+        stubFor(get(urlMatching("/client/1c7b68c7-df51-4f95-b90f-8cb9748e3635"))
+            .willReturn(aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBody(TestUtils.getClasspathResource("/integration/userdatasystem/UserDataResponse.json"))
+                .withStatus(HttpStatus.OK.value())
+            )
+        );
+
+        String expected = TestUtils.getClasspathResource("/api/AccessorsResponseList.json");
+
+        String actual = mockMvc.perform(MockMvcRequestBuilders.get("/note/86c16469-229d-4fb6-a90e-a3a0f67dca8a/accessors"))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expected, actual, true);
+
     }
 }

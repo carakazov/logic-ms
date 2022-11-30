@@ -39,4 +39,9 @@ public class AccessServiceImpl implements AccessService {
     public Boolean clientHasAccessToNote(Client client, Note note) {
         return repository.existsByClientAndNote(client, note);
     }
+
+    @Override
+    public List<Access> getAllAccessesToNote(Note note) {
+        return repository.findAllByNote(note);
+    }
 }

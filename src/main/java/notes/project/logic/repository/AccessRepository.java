@@ -13,4 +13,6 @@ public interface AccessRepository extends JpaRepository<Access, Long> {
     Access findByClientAndNote(Client client, Note note);
 
     boolean existsByClientAndNote(Client client, Note note);
+
+    List<Access> findAllByNote(Note note);
 }
