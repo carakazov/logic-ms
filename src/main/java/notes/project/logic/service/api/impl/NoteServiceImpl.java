@@ -3,6 +3,7 @@ package notes.project.logic.service.api.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,7 @@ public class NoteServiceImpl implements NoteService {
     private final Validator<OwningValidationDto> owningValidator;
     private final UserDataSystemRestService userDataSystemRestService;
     private final AccessorsResponseMapper accessorsResponseMapper;
+    private final Validator<List<Boolean>> denyAccessValidator;
 
     @Override
     @Transactional
@@ -170,5 +172,21 @@ public class NoteServiceImpl implements NoteService {
             accessors.add(new AccessorMappingDto(clientInfo, item));
         });
         return accessorsResponseMapper.to(new AccessorsResponseMappingDto(note, accessors));
+    }
+
+    @Override
+    @Transactional
+    public void denyAccess(UUID externalId, List<UUID> clientIds) {
+        Note note = findByExternalId(externalId);
+        owningValidator.validate(new OwningValidationDto(authHelper.getAuthorizedClientId(), note.getClient().getExternalId()));
+        List<Client> clients = clientIds.stream()
+            .map(clientService::findByExternalId)
+            .collect(Collectors.toList());
+        denyAccessValidator.validate(
+            clients.stream()
+                .map(item -> accessService.clientHasAccessToNote(item, note))
+                .collect(Collectors.toList())
+        );
+        clients.forEach(item -> accessService.denyAccess(note, item));
     }
 }

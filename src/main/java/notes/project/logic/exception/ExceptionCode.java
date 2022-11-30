@@ -7,7 +7,8 @@ public enum ExceptionCode {
     WRONG_REQUEST_PARAMETERS("wrongRequestParameters"),
     INTEGRATION_ERROR("integrationError"),
     NOT_FOUND("requestedResourceNotFound"),
-    NOT_YOUR_DIRECTORY("notYourDirectory");
+    NOT_YOUR_DIRECTORY("notYourDirectory"),
+    CAN_NOT_DENY_ACCESS("canNotDenyAccess");
     @Getter
     private final String code;
 

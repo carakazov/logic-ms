@@ -1,5 +1,6 @@
 package notes.project.logic.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import io.swagger.annotations.Api;
@@ -97,5 +98,16 @@ public class NoteController {
     @Secured("ROLE_USER")
     public AccessorsListResponseDto getAllAccessorsToNote(@PathVariable(name = "externalId") @ApiParam(name = "Внешний ID записки") UUID externalId) {
         return noteService.getAllNoteAccessors(externalId);
+    }
+
+
+    @DeleteMapping("/deny")
+    @ApiOperation(value = "Удаление доступов к записке")
+    @Secured("ROLE_USER")
+    public void denyAccess(
+        @RequestParam(name = "noteExternalId") @ApiParam(name = "ID записки") UUID noteExternalId,
+        @RequestParam(name = "client") @ApiParam(name = "ID клиентов") List<UUID> clients
+    ) {
+        noteService.denyAccess(noteExternalId, clients);
     }
 }

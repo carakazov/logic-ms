@@ -20,6 +20,7 @@ import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.*;
 import notes.project.logic.validation.Validator;
 import notes.project.logic.validation.dto.*;
+import notes.project.logic.validation.impl.DenyAccessValidator;
 import notes.project.logic.validation.impl.OwningValidator;
 import org.apache.zookeeper.Op;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,6 +61,8 @@ class NoteServiceImplTest {
     private Validator<OwningValidationDto> owningValidator;
     @Mock
     private UserDataSystemRestService userDataSystemRestService;
+    @Mock
+    private Validator<List<Boolean>> denyAccessValidator;
 
     private NoteService service;
 
@@ -85,7 +88,8 @@ class NoteServiceImplTest {
             moveNoteValidator,
             owningValidator,
             userDataSystemRestService,
-            TestUtils.getComplexMapper(AccessorsResponseMapper.class)
+            TestUtils.getComplexMapper(AccessorsResponseMapper.class),
+            denyAccessValidator
         );
     }
 
@@ -272,5 +276,24 @@ class NoteServiceImplTest {
         verify(authHelper).getAuthorizedClientId();
         verify(accessService).getAllAccessesToNote(note);
         verify(userDataSystemRestService).getPersonalInfo(CLIENT_EXTERNAL_ID);
+    }
+
+    @Test
+    void denyNoteSuccess() {
+        Note note = DbUtils.note();
+        Client client = DbUtils.client();
+
+        when(repository.findByExternalId(any())).thenReturn(Optional.of(note));
+        when(authHelper.getAuthorizedClientId()).thenReturn(CLIENT_EXTERNAL_ID);
+        when(clientService.findByExternalId(any())).thenReturn(client);
+        when(accessService.clientHasAccessToNote(any(), any())).thenReturn(Boolean.TRUE);
+
+        service.denyAccess(note.getExternalId(), Collections.singletonList(client.getExternalId()));
+
+        verify(repository).findByExternalId(note.getExternalId());
+        verify(authHelper).getAuthorizedClientId();
+        verify(clientService).findByExternalId(client.getExternalId());
+        verify(accessService).clientHasAccessToNote(client, note);
+        verify(accessService).denyAccess(note, client);
     }
 }
