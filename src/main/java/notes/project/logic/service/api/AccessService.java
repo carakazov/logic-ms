@@ -16,4 +16,6 @@ public interface AccessService {
     Boolean clientHasAccessToNote(Client client, Note note);
 
     List<Access> getAllAccessesToNote(Note note);
+
+    void denyAccess(Note note, Client client);
 }

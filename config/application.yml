@@ -43,6 +43,7 @@ application:
     integrationError: Error while integration with external service.
     requestedResourceNotFound: Requested resource not found.
     notYourDirectory: Target directory is not yours.
+    canNotDenyAccess: Can not deny access. User has no access to this note.
   externalServices:
     fileSystem:
       name: file-system-client

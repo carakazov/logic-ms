@@ -44,4 +44,9 @@ public class AccessServiceImpl implements AccessService {
     public List<Access> getAllAccessesToNote(Note note) {
         return repository.findAllByNote(note);
     }
+
+    @Override
+    public void denyAccess(Note note, Client client) {
+        repository.deleteByNoteAndClient(note, client);
+    }
 }

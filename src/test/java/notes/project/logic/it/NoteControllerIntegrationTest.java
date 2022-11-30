@@ -327,6 +327,25 @@ class NoteControllerIntegrationTest extends AbstractIntegrationTest {
             .andReturn().getResponse().getContentAsString();
 
         JSONAssert.assertEquals(expected, actual, true);
+    }
 
+    @Test
+    void denyAccessSuccess() throws Exception {
+        setAuthentication(ROLE_USER);
+        stubInternalToken();
+
+        testEntityManager.merge(DbUtils.client());
+        testEntityManager.merge(DbUtils.directory());
+        testEntityManager.merge(DbUtils.note());
+        testEntityManager.merge(DbUtils.access());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/note/deny?noteExternalId=86c16469-229d-4fb6-a90e-a3a0f67dca8a&client=1c7b68c7-df51-4f95-b90f-8cb9748e3635"))
+            .andExpect(status().isOk());
+
+        int count = testEntityManager.getEntityManager().createQuery(
+            "select count(access) from access access"
+        ).getFirstResult();
+
+        assertEquals(0, count);
     }
 }

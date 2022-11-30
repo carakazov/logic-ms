@@ -15,4 +15,6 @@ public interface AccessRepository extends JpaRepository<Access, Long> {
     boolean existsByClientAndNote(Client client, Note note);
 
     List<Access> findAllByNote(Note note);
+
+    void deleteByNoteAndClient(Note note, Client client);
 }

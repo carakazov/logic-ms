@@ -1,5 +1,6 @@
 package notes.project.logic.service.api;
 
+import java.util.List;
 import java.util.UUID;
 
 import notes.project.logic.dto.api.*;
@@ -29,4 +30,6 @@ public interface NoteService {
     void changeAccess(ChangeAccessModeRequestDto request);
 
     AccessorsListResponseDto getAllNoteAccessors(UUID noteExternalId);
+
+    void denyAccess(UUID externalId, List<UUID> clientIds);
 }
