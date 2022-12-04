@@ -15,5 +15,6 @@ public class UserDataSystemPersonalInfoDto {
     private String middleName;
     private LocalDate birthDate;
     private UUID externalId;
+    private String email;
     private List<UserDataSystemAdditionalInfoDto> additionalInfo;
 }

@@ -1,11 +1,28 @@
 server:
   port: 8070
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: project.notes.restore@gmail.com
+    password: pzjcmjfkogznsdzo
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: http://${OAUTH_HOST:localhost}:${OAUTH_PORT:8081}/.well-known/jwks.json
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+    port: 5672
+    virtualHost: /
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/logic_ms
@@ -20,15 +37,20 @@ spring:
       matching-strategy: ant_path_matcher
   cloud:
     stream:
+      defaulBinder: rabbit
       function:
-        definition: newUserListener
+        definition: newUserListener;fileSystemNotificationListener
       kafka:
         binder:
           brokers: localhost
           defaultBrokerPort: 29092
           replication-factor: 1
       bindings:
+        fileSystemNotificationListener-in-0:
+          destination: notification.channel
+          contentType: application/json
         newUserListener-in-0:
+          binder: kafka
           destination: additional.info.topic
           group: logic.ms.group
           consumer:
@@ -36,6 +58,8 @@ spring:
             max-attempts: 1
 
 application:
+  sender: project.notes.restore@gmail.com
+  topic: Information
   systemName: file-system
   errorMessages:
     internalError: internal error
@@ -51,6 +75,13 @@ application:
     userData:
       name: user-data-system-client
       url: http://localhost:8082/
+
+  messageTemplates:
+    clusterWasArchived: "Здравствуйте!\nВы долго не проявляли никакой активности в системе.
+    Все ваши записки были помещены в архив.\nОбратитесь к администратору для разархивирования."
+    clusterWillBeDeletedSoon: "Здравствуйте!\nВы слишком долго отсутствовали в системе.\nВсе ваши записки
+    временно удалены. Обратитесь к администратору для восстановления, иначе они будут удалены окончательно через {daysCount} дней!!!"
+    clusterIrrevocableDeleted: "Здравствуйте!\nВас так долго не было в системе, что ваши записки были удалены."
 
   keycloakServerProfile:
     url: http://localhost:8484/auth/realms/file-system-realm/protocol/openid-connect/token

@@ -22,4 +22,8 @@ public interface ClientService {
     PersonalInfoDto changePersonalInfo(ChangePersonalInfoRequestDto request);
 
     AllClientsResponseDto getAllClients();
+
+    void renewClientCluster(UUID clusterExternalId);
+
+    PersonalInfoDto getPersonalInfoByClusterExternalId(UUID clusterExternalId);
 }

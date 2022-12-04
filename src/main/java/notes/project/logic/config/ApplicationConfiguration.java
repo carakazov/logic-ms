@@ -1,6 +1,8 @@
 package notes.project.logic.config;
 
 import java.util.TimeZone;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXBContext;
@@ -46,5 +48,11 @@ public class ApplicationConfiguration {
             RestorePasswordRequestKafkaDto.class
         );
         return context.createUnmarshaller();
+    }
+
+
+    @Bean
+    public ExecutorService executorService() {
+        return Executors.newCachedThreadPool();
     }
 }
