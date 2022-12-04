@@ -114,6 +114,20 @@ public class ClientServiceImpl implements ClientService {
         return allClientsListMapper.to(userDataSystemResponse);
     }
 
+    @Override
+    public void renewClientCluster(UUID clusterExternalId) {
+        Client client = repository.findByClusterExternalId(clusterExternalId);
+        String clusterTitle = CLUSTER_TITLE_TEMPLATE.replace(CLUSTER_TITLE_PLACEHOLDER, client.getExternalId().toString());
+        CreateClusterResponseDto createClusterResponse = fileSystemRestService.createCluster(new CreateClusterRequestDto(clusterTitle));
+        client.setClusterExternalId(createClusterResponse.getExternalId());
+    }
+
+    @Override
+    public PersonalInfoDto getPersonalInfoByClusterExternalId(UUID clusterExternalId) {
+        Client client = repository.findByClusterExternalId(clusterExternalId);
+        return getPersonalInfo(client.getExternalId());
+    }
+
     private Client getClientFromContext() {
         UUID currentClientId = authHelper.getAuthorizedClientId();
         return findByExternalId(currentClientId);

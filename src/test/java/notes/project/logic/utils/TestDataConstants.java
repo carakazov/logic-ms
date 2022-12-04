@@ -68,4 +68,8 @@ public class TestDataConstants {
     public static final String DELETE_HISTORY_EVENT = "CREATED";
     public static final LocalDateTime DELETE_HISTORY_EVENT_DATE = LocalDateTime.of(2022, 10, 10, 10, 10 ,10);
     public static final String SYSTEM_NAME = "systemName";
+
+    public static final String MESSAGE_TEMPLATE = "test template {daysCount}";
+    public static final String MESSAGE = "test template 10";
+    public static final Long DAYS_TO_DELETE = 10L;
 }

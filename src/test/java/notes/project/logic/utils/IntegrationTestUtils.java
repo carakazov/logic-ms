@@ -7,6 +7,8 @@ import java.util.Map;
 import lombok.experimental.UtilityClass;
 import notes.project.logic.dto.api.ChangeAdditionalInfoDto;
 import notes.project.logic.dto.integration.filesystem.*;
+import notes.project.logic.dto.integration.rabbit.EventCode;
+import notes.project.logic.dto.integration.rabbit.FileSystemMessage;
 import notes.project.logic.dto.integration.userdatasystem.*;
 import notes.project.logic.oauth.dto.InternalServerTokenResponseDto;
 import notes.project.logic.oauth.dto.KeycloakServerTokenResponseDto;
@@ -15,6 +17,13 @@ import static notes.project.logic.utils.TestDataConstants.*;
 
 @UtilityClass
 public class IntegrationTestUtils {
+    public static FileSystemMessage fileSystemMessage() {
+        return new FileSystemMessage()
+            .setEventCode(EventCode.CLUSTER_WILL_BE_DELETED_SOON)
+            .setClusterExternalId(CLUSTER_EXTERNAL_ID)
+            .setDaysBeforeDelete(DAYS_TO_DELETE);
+    }
+
     public static UserDataSystemAllClientsResponseDto userDataSystemAllClientsResponseDto() {
         return new UserDataSystemAllClientsResponseDto()
             .setSystemName(SYSTEM_NAME)

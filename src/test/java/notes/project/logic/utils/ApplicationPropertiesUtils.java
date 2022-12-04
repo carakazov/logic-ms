@@ -1,7 +1,10 @@
 package notes.project.logic.utils;
 
+import java.util.Map;
+
 import lombok.experimental.UtilityClass;
 import notes.project.logic.config.ApplicationProperties;
+import notes.project.logic.dto.integration.rabbit.EventCode;
 
 import static notes.project.logic.utils.TestDataConstants.*;
 
@@ -9,6 +12,16 @@ import static notes.project.logic.utils.TestDataConstants.*;
 public class ApplicationPropertiesUtils {
     public static ApplicationProperties applicationProperties() {
         return new ApplicationProperties();
+    }
+
+    public static ApplicationProperties getApplicationPropertiesForMailTemplateHelperTest() {
+        return new ApplicationProperties()
+            .setMessageTemplates(
+                Map.of(
+                    EventCode.CLUSTER_WILL_BE_DELETED_SOON.getCode(),
+                    MESSAGE_TEMPLATE
+                )
+            );
     }
 
     public static ApplicationProperties getApplicationPropertiesForClientService() {

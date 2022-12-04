@@ -17,9 +17,12 @@ import org.springframework.stereotype.Component;
 public class ApplicationProperties {
 
     private String systemName;
+    private String topic;
+    private String sender;
     private Map<String, String> errorMessages;
     private InternalServerProfile internalServerProfile;
     private KeycloakServerProfile keycloakServerProfile;
+    private Map<String, String> messageTemplates;
 
     public String getMessage(String messageCode) {
         return errorMessages.get(messageCode);
