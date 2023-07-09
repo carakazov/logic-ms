@@ -38,14 +38,13 @@ public class UserDataSystemRestServiceImpl extends AbstractRestService implement
     @Override
     @Caching(
         evict = {
-            @CacheEvict(value = CacheConfigValue.PERSONAL_INFO, key = CacheConfigValue.REQUEST_CLIENT_EXTERNAL_ID),
-            @CacheEvict(value = CacheConfigValue.ALL_CLIENTS_LIST)
+            @CacheEvict(value = CacheConfigValue.PERSONAL_INFO, key = CacheConfigValue.REQUEST_CLIENT_EXTERNAL_ID)
         }
     )
-    public UserDataSystemPersonalInfoDto changePersonalInfo(UserDataSystemChangePersonalInfoRequestDto request) {
+    public UserDataSystemPersonalInfoDto changePersonalInfo(UserDataSystemChangePersonalInfoRequestDto request, Boolean createNew) {
         ResponseEntity<UserDataSystemPersonalInfoDto> response;
         try {
-            response = client.changePersonalInfo(request);
+            response = client.changePersonalInfo(request, createNew);
         } catch(FeignException exception) {
             throw handleFeignException(exception);
         }
@@ -54,7 +53,6 @@ public class UserDataSystemRestServiceImpl extends AbstractRestService implement
     }
 
     @Override
-    @Cacheable(value = CacheConfigValue.ALL_CLIENTS_LIST)
     public UserDataSystemAllClientsResponseDto getAllClientsOfSystem(String systemName) {
         ResponseEntity<UserDataSystemAllClientsResponseDto> response;
         try {

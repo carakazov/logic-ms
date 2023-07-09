@@ -77,7 +77,7 @@ public class NoteServiceImpl implements NoteService {
         moveNoteValidator.validate(new MoveNoteValidationDto(authHelper.getAuthorizedClientId(), newDirectory));
         FileSystemChangeFileDirectoryResponseDto fileSystemResponse = fileSystemRestService.changeFileDirectory(changeDirectoryMapper.toRequest(request));
         MoveNoteResponseDto response = changeDirectoryMapper.toResponse(fileSystemResponse);
-        Note note = findByExternalId(request.getCreatedFileExternalId());
+        Note note = findByExternalId(request.getCreatedNoteExternalId());
         note.setDirectory(newDirectory);
         return response;
     }
@@ -120,7 +120,7 @@ public class NoteServiceImpl implements NoteService {
             note.getClient().getExternalId()
         ));
 
-        fileSystemRestService.deleteFile(externalId);
+        fileSystemRestService.deleteFile(externalId, note.getDirectory().getExternalId());
 
         note.setDeleted(Boolean.TRUE);
     }
@@ -158,7 +158,12 @@ public class NoteServiceImpl implements NoteService {
             authHelper.getAuthorizedClientId(),
             note.getClient().getExternalId()
         ));
-        accessService.addAccess(note, client, request.getAccessMode());
+        if(Boolean.TRUE.equals(accessService.clientHasAccessToNote(client, note))) {
+            Access access = accessService.getAccessOfClientToNote(client, note);
+            access.setAccessMode(request.getAccessMode());
+        } else {
+            accessService.addAccess(note, client, request.getAccessMode());
+        }
     }
 
     @Override
@@ -167,9 +172,12 @@ public class NoteServiceImpl implements NoteService {
         owningValidator.validate(new OwningValidationDto(authHelper.getAuthorizedClientId(), note.getClient().getExternalId()));
         List<Access> accesses = accessService.getAllAccessesToNote(note);
         List<AccessorMappingDto> accessors = new ArrayList<>();
+        UUID currentUserExternalId = authHelper.getAuthorizedClientId();
         accesses.forEach(item -> {
-            UserDataSystemPersonalInfoDto clientInfo = userDataSystemRestService.getPersonalInfo(item.getClient().getExternalId());
-            accessors.add(new AccessorMappingDto(clientInfo, item));
+            if(!currentUserExternalId.equals(item.getClient().getExternalId())) {
+                UserDataSystemPersonalInfoDto clientInfo = userDataSystemRestService.getPersonalInfo(item.getClient().getExternalId());
+                accessors.add(new AccessorMappingDto(clientInfo, item));
+            }
         });
         return accessorsResponseMapper.to(new AccessorsResponseMappingDto(note, accessors));
     }

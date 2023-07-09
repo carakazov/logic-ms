@@ -18,7 +18,7 @@ public interface FileSystemRestService {
 
     void updateFile(UUID externalId, FileSystemUpdateFileRequestDto request);
 
-    void deleteFile(UUID externalId);
+    void deleteFile(UUID externalId, UUID directoryExternalId);
 
     FileSystemArchiveResponseDto getFileArchiveHistory(UUID externalId);
 

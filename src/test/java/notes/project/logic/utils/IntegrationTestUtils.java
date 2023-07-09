@@ -18,10 +18,7 @@ import static notes.project.logic.utils.TestDataConstants.*;
 @UtilityClass
 public class IntegrationTestUtils {
     public static FileSystemMessage fileSystemMessage() {
-        return new FileSystemMessage()
-            .setEventCode(EventCode.CLUSTER_WILL_BE_DELETED_SOON)
-            .setClusterExternalId(CLUSTER_EXTERNAL_ID)
-            .setDaysBeforeDelete(DAYS_TO_DELETE);
+        return new FileSystemMessage(EventCode.CLUSTER_WILL_BE_DELETED_SOON.getCode(), CLUSTER_EXTERNAL_ID, DAYS_TO_DELETE);
     }
 
     public static UserDataSystemAllClientsResponseDto userDataSystemAllClientsResponseDto() {

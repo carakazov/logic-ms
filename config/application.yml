@@ -18,16 +18,14 @@ spring:
         jwt:
           jwk-set-uri: http://${OAUTH_HOST:localhost}:${OAUTH_PORT:8081}/.well-known/jwks.json
   rabbitmq:
-    host: localhost
-    username: guest
-    password: guest
-    port: 5672
+    host: ${RABBIT_HOST:localhost}
+    username: ${RABBIT_USERNAME:guest}
+    port: ${RABBIT_PORT:5672}
     virtualHost: /
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/logic_ms
-    username: logic_ms_user
-    password: 1q2w3e
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:logic_ms}
+    username: ${DB_USER:logic_ms_user}
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: true
@@ -37,30 +35,36 @@ spring:
       matching-strategy: ant_path_matcher
   cloud:
     stream:
-      defaulBinder: rabbit
+      defaultBinder: rabbit
       function:
         definition: newUserListener;fileSystemNotificationListener
       kafka:
         binder:
-          brokers: localhost
-          defaultBrokerPort: 29092
+          brokers: ${KAFKA_HOST:localhost}
+          defaultBrokerPort: ${KAFKA_PORT:29092}
           replication-factor: 1
       bindings:
         fileSystemNotificationListener-in-0:
-          destination: notification.channel
-          contentType: application/json
+          destination: ${RABBIT_EXCHANGE:filesystem.notifications.exchange}
+          contentType: text/plain
+          binder: rabbit
         newUserListener-in-0:
           binder: kafka
-          destination: additional.info.topic
-          group: logic.ms.group
+          destination: ${KAFKA_TOPIC:additional.info.topic}
+          group: ${KAFKA_GROUP:logic.ms.group}
           consumer:
             concurrency: 10
             max-attempts: 1
+      rabbit:
+        bindings:
+          fileSystemNotificationListener-in-0:
+            consumer:
+              binding-routing-key: "#"
 
 application:
   sender: project.notes.restore@gmail.com
   topic: Information
-  systemName: file-system
+  systemName: notes-system
   errorMessages:
     internalError: internal error
     wrongRequestParameters: wrong request parameters
@@ -71,10 +75,10 @@ application:
   externalServices:
     fileSystem:
       name: file-system-client
-      url: http://localhost:8080/
+      url: http://${FILE_SYSTEM_HOST:localhost}:${FILE_SYSTEM_PORT:8080}/
     userData:
       name: user-data-system-client
-      url: http://localhost:8082/
+      url: http://${USER_DATA_SYSTEM_HOST:localhost}:${USER_DATA_SYSTEM_PORT:8082}/
 
   messageTemplates:
     clusterWasArchived: "Здравствуйте!\nВы долго не проявляли никакой активности в системе.

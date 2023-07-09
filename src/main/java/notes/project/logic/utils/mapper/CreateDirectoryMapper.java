@@ -1,5 +1,7 @@
 package notes.project.logic.utils.mapper;
 
+import java.util.UUID;
+
 import liquibase.pro.packaged.M;
 import notes.project.logic.dto.api.CreateDirectoryRequestDto;
 import notes.project.logic.dto.api.CreateDirectoryResponseDto;
@@ -14,7 +16,9 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CreateDirectoryMapper {
-    FileSystemCreateDirectoryRequestDto toRequest(CreateDirectoryRequestDto source);
+    @Mapping(target = "directoryName", source = "directoryName")
+    @Mapping(target = "clusterExternalId", source = "clusterExternalId")
+    FileSystemCreateDirectoryRequestDto toRequest(String directoryName, UUID clusterExternalId);
 
     CreateDirectoryResponseDto toResponse(FileSystemCreateDirectoryResponseDto source);
 

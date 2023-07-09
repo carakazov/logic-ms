@@ -63,7 +63,7 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     }
 
     @Override
-    @CacheEvict(value = CacheConfigValue.REPLACING_HISTORY)
+    @CacheEvict(value = CacheConfigValue.REPLACING_HISTORY, key = CacheConfigValue.CREATED_FILE_EXTERNAL_ID)
     public FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request) {
         ResponseEntity<FileSystemChangeFileDirectoryResponseDto> response;
         try {
@@ -91,8 +91,7 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     @Override
     @Caching(evict = {
         @CacheEvict(value = CacheConfigValue.NOTE_LIST, key = CacheConfigValue.EXTERNAL_ID),
-        @CacheEvict(value = CacheConfigValue.ARCHIVE_HISTORY_LIST, key = CacheConfigValue.EXTERNAL_ID),
-        @CacheEvict(value = CacheConfigValue.FILE_VERSION, key = CacheConfigValue.EXTERNAL_ID)
+        @CacheEvict(value = CacheConfigValue.ARCHIVE_HISTORY_LIST, key = CacheConfigValue.EXTERNAL_ID)
     })
     public void updateFile(UUID externalId, FileSystemUpdateFileRequestDto request) {
         ResponseEntity<Void> response;
@@ -107,9 +106,10 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     @Override
     @Caching(evict = {
         @CacheEvict(value = CacheConfigValue.NOTE_LIST, key = CacheConfigValue.EXTERNAL_ID),
-        @CacheEvict(value = CacheConfigValue.NOTE_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID)
+        @CacheEvict(value = CacheConfigValue.NOTE_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID),
+        @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.DIRECTORY_EXTERNAL_ID)
     })
-    public void deleteFile(UUID externalId) {
+    public void deleteFile(UUID externalId, UUID directoryExternalId) {
         ResponseEntity<Void> response;
         try {
             response = client.deleteFile(externalId);
@@ -230,7 +230,8 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
 
     @Override
     @Caching(evict = {
-        @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.EXTERNAL_ID)
+        @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.EXTERNAL_ID),
+        @CacheEvict(value = CacheConfigValue.CLUSTER_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID)
     })
     public void deleteCluster(UUID externalId) {
         ResponseEntity<Void> response;

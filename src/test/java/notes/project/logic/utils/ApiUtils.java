@@ -228,7 +228,7 @@ public class ApiUtils {
 
     public static MoveNoteRequestDto moveNoteRequestDto() {
         return new MoveNoteRequestDto()
-            .setCreatedFileExternalId(NOTE_EXTERNAL_ID)
+            .setCreatedNoteExternalId(NOTE_EXTERNAL_ID)
             .setNewDirectoryExternalId(DIRECTORY_ALTERNATE_EXTERNAL_ID);
     }
 
@@ -256,8 +256,7 @@ public class ApiUtils {
 
     public static CreateDirectoryRequestDto createDirectoryRequestDto() {
         return new CreateDirectoryRequestDto()
-            .setDirectoryName(DIRECTORY_NAME)
-            .setClusterExternalId(CLUSTER_EXTERNAL_ID);
+            .setDirectoryName(DIRECTORY_NAME);
     }
 
     public static PersonalInfoDto personalInfoDto() {

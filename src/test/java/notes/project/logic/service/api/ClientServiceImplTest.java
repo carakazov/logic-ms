@@ -170,14 +170,14 @@ class ClientServiceImplTest {
         UserDataSystemChangePersonalInfoRequestDto integrationRequest = IntegrationTestUtils.userDataSystemChangePersonalInfoRequestDto();
 
         when(authHelper.getAuthorizedClientId()).thenReturn(CLIENT_EXTERNAL_ID);
-        when(userDataSystemRestService.changePersonalInfo(any())).thenReturn(IntegrationTestUtils.userDataSystemPersonalInfoDto());
+        when(userDataSystemRestService.changePersonalInfo(any(), any())).thenReturn(IntegrationTestUtils.userDataSystemPersonalInfoDto());
 
-        PersonalInfoDto actual = service.changePersonalInfo(ApiUtils.changePersonalInfoRequestDto());
+        PersonalInfoDto actual = service.changePersonalInfo(ApiUtils.changePersonalInfoRequestDto(), false);
 
         assertEquals(expected, actual);
 
         verify(authHelper).getAuthorizedClientId();
-        verify(userDataSystemRestService).changePersonalInfo(integrationRequest);
+        verify(userDataSystemRestService).changePersonalInfo(integrationRequest, false);
     }
 
     @Test

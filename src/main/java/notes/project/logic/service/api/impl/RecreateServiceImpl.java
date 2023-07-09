@@ -36,6 +36,7 @@ public class RecreateServiceImpl implements RecreateService {
     public void recreateDirectory(UUID externalId) {
         Directory directory = directoryService.findDirectoryByExternalId(externalId);
         fileSystemRestService.recreateDirectory(directory.getExternalId(), directory.getClient().getClusterExternalId());
+        directory.setDeleted(Boolean.FALSE);
     }
 
     @Override
@@ -43,5 +44,6 @@ public class RecreateServiceImpl implements RecreateService {
     public void recreateNote(UUID externalId) {
         Note note = noteService.findByExternalId(externalId);
         fileSystemRestService.recreateFile(note.getExternalId(), note.getDirectory().getExternalId());
+        note.setDeleted(Boolean.FALSE);
     }
 }

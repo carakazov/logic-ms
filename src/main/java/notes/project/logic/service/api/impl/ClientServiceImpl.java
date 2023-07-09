@@ -25,6 +25,7 @@ import notes.project.logic.service.integration.http.UserDataSystemRestService;
 import notes.project.logic.utils.AuthHelper;
 import notes.project.logic.utils.cache.CacheConfigValue;
 import notes.project.logic.utils.mapper.*;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -94,7 +95,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public PersonalInfoDto changePersonalInfo(ChangePersonalInfoRequestDto request) {
+    public PersonalInfoDto changePersonalInfo(ChangePersonalInfoRequestDto request, Boolean createNew) {
         UUID clientExternalId = authHelper.getAuthorizedClientId();
         UserDataSystemChangePersonalInfoRequestDto userDataSystemRequest = changePersonalInfoRequestMapper.to(
             new ChangePersonalInfoMappingDto(
@@ -102,7 +103,7 @@ public class ClientServiceImpl implements ClientService {
                 request
             )
         );
-        UserDataSystemPersonalInfoDto userDataSystemResponse = userDataSystemRestService.changePersonalInfo(userDataSystemRequest);
+        UserDataSystemPersonalInfoDto userDataSystemResponse = userDataSystemRestService.changePersonalInfo(userDataSystemRequest, createNew);
         return personalInfoMapper.to(userDataSystemResponse);
     }
 

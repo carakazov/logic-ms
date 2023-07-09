@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.PersonalInfoDto;
+import notes.project.logic.dto.integration.rabbit.EventCode;
 import notes.project.logic.dto.integration.rabbit.FileSystemMessage;
 import notes.project.logic.handler.FileSystemMessageHandler;
 import notes.project.logic.service.api.ClientService;
@@ -22,7 +23,7 @@ public class FileSystemMessageHandlerImpl implements FileSystemMessageHandler {
     public void handle(FileSystemMessage message) {
         PersonalInfoDto personalInfo = clientService.getPersonalInfoByClusterExternalId(message.getClusterExternalId());
         mailSender.sendEmail(message, personalInfo.getEmail());
-        if(Objects.nonNull(message.getDaysBeforeDelete())) {
+        if(EventCode.CLUSTER_IRREVOCABLE_DELETED.equals(message.getEventCode())) {
             clientService.renewClientCluster(message.getClusterExternalId());
         }
     }

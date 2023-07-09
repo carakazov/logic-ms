@@ -14,11 +14,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel(description = "Запрос на создание директории")
 public class CreateDirectoryRequestDto {
+    @Size(min = 1, max = 125)
     @ApiModelProperty(value = "Название директории", required = true)
-    @NotNull
     private String directoryName;
-
-    @ApiModelProperty(value = "Внешний ID кластера", required = true)
-    @NotNull
-    private UUID clusterExternalId;
 }

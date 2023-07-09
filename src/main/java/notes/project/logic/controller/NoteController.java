@@ -21,7 +21,7 @@ public class NoteController {
     private final NoteService noteService;
 
     @PostMapping
-    @ApiOperation(value = "Создагте записки")
+    @ApiOperation(value = "Создание записки")
     @Secured("ROLE_USER")
     public CreateNoteResponseDto createNote(@RequestBody CreateNoteRequestDto request) {
         return noteService.createNote(request);

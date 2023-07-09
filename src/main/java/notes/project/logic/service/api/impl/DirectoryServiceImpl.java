@@ -43,10 +43,10 @@ public class DirectoryServiceImpl implements DirectoryService {
     @Override
     @Transactional
     public CreateDirectoryResponseDto createDirectory(CreateDirectoryRequestDto request) {
-        FileSystemCreateDirectoryRequestDto fileSystemRequest = createDirectoryMapper.toRequest(request);
+        Client client = clientService.findByExternalId(authHelper.getAuthorizedClientId());
+        FileSystemCreateDirectoryRequestDto fileSystemRequest = createDirectoryMapper.toRequest(request.getDirectoryName(), client.getClusterExternalId());
         FileSystemCreateDirectoryResponseDto fileSystemResponse = fileSystemRestService.createDirectory(fileSystemRequest);
         CreateDirectoryResponseDto response = createDirectoryMapper.toResponse(fileSystemResponse);
-        Client client = clientService.findByExternalId(authHelper.getAuthorizedClientId());
         Directory directory = createDirectoryMapper.toDirectory(client, response);
         repository.save(directory);
         return response;
@@ -66,6 +66,7 @@ public class DirectoryServiceImpl implements DirectoryService {
         Directory directory = findDirectoryByExternalId(externalId);
         owningValidator.validate(new OwningValidationDto(authHelper.getAuthorizedClientId(), directory.getClient().getExternalId()));
         fileSystemRestService.deleteDirectory(directory.getExternalId(), directory.getClient().getClusterExternalId());
+        directory.setDeleted(Boolean.TRUE);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package notes.project.logic.utils.cache;
 
 public interface CacheConfigValue {
+    String CREATED_FILE_EXTERNAL_ID = "#request.createdFileExternalId";
     String REQUEST_DIRECTORY_EXTERNAL_ID = "#request.directoryExternalId";
     String REQUEST_CLUSTER_EXTERNAL_ID = "#request.clusterExternalId";
     String REQUEST_CLIENT_EXTERNAL_ID = "#request.clientExternalId";

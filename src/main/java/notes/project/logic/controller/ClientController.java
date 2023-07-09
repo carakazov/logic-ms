@@ -50,8 +50,10 @@ public class ClientController {
     @PutMapping
     @ApiOperation("Обновление личных данных")
     @Secured("ROLE_USER")
-    public PersonalInfoDto changePersonalInfo(@RequestBody ChangePersonalInfoRequestDto request) {
-        return clientService.changePersonalInfo(request);
+    public PersonalInfoDto changePersonalInfo(
+        @RequestBody ChangePersonalInfoRequestDto request,
+        @RequestParam(name = "createNew", defaultValue = "false") Boolean createNew) {
+        return clientService.changePersonalInfo(request, createNew);
     }
 
     @GetMapping("/list")

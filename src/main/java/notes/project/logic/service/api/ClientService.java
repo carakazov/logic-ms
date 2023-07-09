@@ -5,6 +5,7 @@ import java.util.UUID;
 import notes.project.logic.dto.api.*;
 import notes.project.logic.utils.mapper.dto.ChangePersonalInfoMappingDto;
 import notes.project.logic.model.Client;
+import org.apache.kafka.common.protocol.types.Field;
 
 public interface ClientService {
     Client save(UUID externalId);
@@ -19,7 +20,7 @@ public interface ClientService {
 
     DeleteHistoryResponseDto getClusterDeleteHistory(UUID clientExternalId);
 
-    PersonalInfoDto changePersonalInfo(ChangePersonalInfoRequestDto request);
+    PersonalInfoDto changePersonalInfo(ChangePersonalInfoRequestDto request, Boolean createNew);
 
     AllClientsResponseDto getAllClients();
 

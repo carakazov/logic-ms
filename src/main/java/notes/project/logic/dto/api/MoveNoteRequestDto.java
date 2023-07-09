@@ -11,8 +11,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel(description = "Запрос на изменение директории файла")
 public class MoveNoteRequestDto {
-    @ApiModelProperty(value = "Внешний ID файла")
-    private UUID createdFileExternalId;
-    @ApiModelProperty(value = "Внешний ID новой директории")
+    @ApiModelProperty(value = "Внешний ID файла", required = true)
+    private UUID createdNoteExternalId;
+    @ApiModelProperty(value = "Внешний ID новой директории", required = true)
     private UUID newDirectoryExternalId;
 }

@@ -12,10 +12,10 @@ import notes.project.logic.model.AccessMode;
 @Accessors(chain = true)
 @ApiModel(description = "Запрос на изменение типа доступа к записке")
 public class ChangeAccessModeRequestDto {
-    @ApiModelProperty(value = "Внешний ID записка")
+    @ApiModelProperty(value = "Внешний ID записка", required = true)
     private UUID noteExternalId;
-    @ApiModelProperty(value = "Внешний ID клиента")
+    @ApiModelProperty(value = "Внешний ID клиента", required = true)
     private UUID clientExternalId;
-    @ApiModelProperty(value = "Типа доступа")
+    @ApiModelProperty(value = "Типа доступа", required = true)
     private AccessMode accessMode;
 }

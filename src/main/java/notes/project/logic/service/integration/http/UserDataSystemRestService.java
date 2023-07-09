@@ -12,7 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 public interface UserDataSystemRestService {
     UserDataSystemPersonalInfoDto getPersonalInfo(UUID externalId);
 
-    UserDataSystemPersonalInfoDto changePersonalInfo(UserDataSystemChangePersonalInfoRequestDto request);
+    UserDataSystemPersonalInfoDto changePersonalInfo(UserDataSystemChangePersonalInfoRequestDto request, Boolean createNew);
 
     UserDataSystemAllClientsResponseDto getAllClientsOfSystem(String systemName);
 }
