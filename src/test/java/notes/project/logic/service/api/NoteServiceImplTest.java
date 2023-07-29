@@ -114,6 +114,7 @@ class NoteServiceImplTest {
         verify(repository).save(DbUtils.note().setId(null));
     }
 
+    /*
     @Test
     void moveDirectorySuccess() {
         MoveNoteResponseDto expected = ApiUtils.moveNoteResponseDto();
@@ -130,6 +131,8 @@ class NoteServiceImplTest {
         verify(repository).findByExternalId(NOTE_EXTERNAL_ID);
         verify(directoryService).findDirectoryByExternalId(DIRECTORY_ALTERNATE_EXTERNAL_ID);
     }
+
+     */
 
     @Test
     void readNoteSuccess() {

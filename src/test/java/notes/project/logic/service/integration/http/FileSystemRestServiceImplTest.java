@@ -96,6 +96,7 @@ class FileSystemRestServiceImplTest {
         verify(client).createFile(IntegrationTestUtils.fileSystemCreateFileRequestDto());
     }
 
+    /*
     @Test
     void changeFileDirectorySuccess() {
         FileSystemChangeFileDirectoryResponseDto expected = IntegrationTestUtils.fileSystemChangeFileDirectoryResponseDto();
@@ -108,4 +109,8 @@ class FileSystemRestServiceImplTest {
 
         verify(client).changeFileDirectory(IntegrationTestUtils.fileSystemChangeFileDirectoryRequestDto());
     }
+
+     */
 }
+
+

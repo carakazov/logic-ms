@@ -63,8 +63,14 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     }
 
     @Override
-    @CacheEvict(value = CacheConfigValue.REPLACING_HISTORY, key = CacheConfigValue.CREATED_FILE_EXTERNAL_ID)
-    public FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request) {
+    @Caching(
+        evict = {
+            @CacheEvict(value = CacheConfigValue.REPLACING_HISTORY, key = CacheConfigValue.CREATED_FILE_EXTERNAL_ID),
+            @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = "#request.newDirectoryExternalId"),
+            @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = "#oldDirectory")
+        }
+    )
+    public FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request, UUID oldDirectory) {
         ResponseEntity<FileSystemChangeFileDirectoryResponseDto> response;
         try {
             response = client.changeFileDirectory(request);

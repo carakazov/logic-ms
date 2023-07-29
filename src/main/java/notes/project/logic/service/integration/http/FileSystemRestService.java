@@ -12,7 +12,7 @@ public interface FileSystemRestService {
 
     FileSystemCreateFileResponseDto createFile(FileSystemCreateFileRequestDto request);
 
-    FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request);
+    FileSystemChangeFileDirectoryResponseDto changeFileDirectory(FileSystemChangeFileDirectoryRequestDto request, UUID oldDirectory);
 
     FileSystemFileResponseDto readFile(UUID externalId);
 

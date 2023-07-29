@@ -75,9 +75,9 @@ public class NoteServiceImpl implements NoteService {
     public MoveNoteResponseDto moveNote(MoveNoteRequestDto request) {
         Directory newDirectory = directoryService.findDirectoryByExternalId(request.getNewDirectoryExternalId());
         moveNoteValidator.validate(new MoveNoteValidationDto(authHelper.getAuthorizedClientId(), newDirectory));
-        FileSystemChangeFileDirectoryResponseDto fileSystemResponse = fileSystemRestService.changeFileDirectory(changeDirectoryMapper.toRequest(request));
-        MoveNoteResponseDto response = changeDirectoryMapper.toResponse(fileSystemResponse);
         Note note = findByExternalId(request.getCreatedNoteExternalId());
+        FileSystemChangeFileDirectoryResponseDto fileSystemResponse = fileSystemRestService.changeFileDirectory(changeDirectoryMapper.toRequest(request), note.getDirectory().getExternalId());
+        MoveNoteResponseDto response = changeDirectoryMapper.toResponse(fileSystemResponse);
         note.setDirectory(newDirectory);
         return response;
     }
