@@ -26,5 +26,6 @@ public interface CreateDirectoryMapper {
     @Mapping(target = "externalId", source = "response.externalId")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deleted", constant = "false")
+    @Mapping(target = "title", source = "response.directoryName")
     Directory toDirectory(Client client, CreateDirectoryResponseDto response);
 }

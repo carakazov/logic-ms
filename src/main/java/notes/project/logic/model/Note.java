@@ -17,6 +17,8 @@ public class Note {
 
     private UUID externalId;
 
+    private String title;
+
     @ManyToOne
     @JoinColumn(name = "directory_id")
     private Directory directory;

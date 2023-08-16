@@ -21,5 +21,6 @@ public interface CreateFileMapper {
     @Mapping(target = "client", source = "client")
     @Mapping(target = "directory", source = "directory")
     @Mapping(target = "deleted", constant = "false")
+    @Mapping(target = "title", source = "response.title")
     Note toNote(CreateNoteResponseDto response, Client client, Directory directory);
 }

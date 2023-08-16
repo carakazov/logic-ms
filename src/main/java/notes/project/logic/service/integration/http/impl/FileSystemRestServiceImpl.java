@@ -292,9 +292,10 @@ public class FileSystemRestServiceImpl extends AbstractRestService implements Fi
     @Override
     @Caching(evict = {
         @CacheEvict(value = CacheConfigValue.NOTE_DELETE_HISTORY, key = CacheConfigValue.EXTERNAL_ID),
-        @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.DIRECTORY_EXTERNAL_ID)
+        @CacheEvict(value = CacheConfigValue.DIRECTORY_LIST, key = CacheConfigValue.DIRECTORY_EXTERNAL_ID),
+        @CacheEvict(value = CacheConfigValue.CLUSTER, key = CacheConfigValue.CLUSTER_EXTERNAL_ID)
     })
-    public void recreateFile(UUID externalId, UUID directoryExternalId) {
+    public void recreateFile(UUID externalId, UUID directoryExternalId, UUID clusterExternalId) {
         ResponseEntity<Void> response;
         try {
             response = client.recreateNote(externalId);

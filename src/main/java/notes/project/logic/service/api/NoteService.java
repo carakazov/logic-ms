@@ -32,4 +32,6 @@ public interface NoteService {
     AccessorsListResponseDto getAllNoteAccessors(UUID noteExternalId);
 
     void denyAccess(UUID externalId, List<UUID> clientIds);
+
+    AccessedNotesResponseDto getMyAccessedNotes();
 }

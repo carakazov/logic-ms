@@ -18,6 +18,8 @@ public class Directory {
 
     private UUID externalId;
 
+    private String title;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;

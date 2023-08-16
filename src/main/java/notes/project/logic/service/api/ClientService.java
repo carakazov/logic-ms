@@ -3,6 +3,8 @@ package notes.project.logic.service.api;
 import java.util.UUID;
 
 import notes.project.logic.dto.api.*;
+import notes.project.logic.dto.api.admin.ClusterAdminDto;
+import notes.project.logic.dto.api.admin.DeletedObjectsList;
 import notes.project.logic.utils.mapper.dto.ChangePersonalInfoMappingDto;
 import notes.project.logic.model.Client;
 import org.apache.kafka.common.protocol.types.Field;
@@ -27,4 +29,8 @@ public interface ClientService {
     void renewClientCluster(UUID clusterExternalId);
 
     PersonalInfoDto getPersonalInfoByClusterExternalId(UUID clusterExternalId);
+
+    ClusterAdminDto getClientInfo(UUID externalId);
+
+    DeletedObjectsList getDeletedObjects(UUID externalId);
 }

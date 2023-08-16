@@ -67,6 +67,7 @@ public class DirectoryServiceImpl implements DirectoryService {
         owningValidator.validate(new OwningValidationDto(authHelper.getAuthorizedClientId(), directory.getClient().getExternalId()));
         fileSystemRestService.deleteDirectory(directory.getExternalId(), directory.getClient().getClusterExternalId());
         directory.setDeleted(Boolean.TRUE);
+        directory.getNotes().forEach(item -> item.setDeleted(Boolean.TRUE));
     }
 
     @Override

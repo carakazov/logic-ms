@@ -44,5 +44,5 @@ public interface FileSystemRestService {
 
     void recreateDirectory(UUID externalId, UUID clusterExternalId);
 
-    void recreateFile(UUID externalId, UUID directoryExternalId);
+    void recreateFile(UUID externalId, UUID directoryExternalId, UUID clusterExternalId);
 }

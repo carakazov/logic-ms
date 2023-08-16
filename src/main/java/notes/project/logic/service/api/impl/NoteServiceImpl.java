@@ -197,4 +197,22 @@ public class NoteServiceImpl implements NoteService {
         );
         clients.forEach(item -> accessService.denyAccess(note, item));
     }
+
+    @Override
+    @Transactional
+    public AccessedNotesResponseDto getMyAccessedNotes() {
+        Client client = clientService.findByExternalId(authHelper.getAuthorizedClientId());
+        List<Access> accesses = accessService.findAllAccessesOfClient(client);
+        List<NoteResponseDto> notes = accesses.stream()
+                .filter(item -> !client.equals(item.getNote().getClient()))
+                .map(item -> {
+                    FileSystemFileResponseDto note = fileSystemRestService.readFile(item.getNote().getExternalId());
+                    NoteResponseDto noteResponse = noteResponseMapper.to(note, item);
+                    noteResponse.getNote().setExternalId(item.getNote().getExternalId());
+                    return noteResponse;
+                })
+                .collect(Collectors.toList());
+
+        return new AccessedNotesResponseDto(notes);
+    }
 }

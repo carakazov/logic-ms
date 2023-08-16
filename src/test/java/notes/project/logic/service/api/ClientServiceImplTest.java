@@ -11,12 +11,15 @@ import notes.project.logic.dto.integration.userdatasystem.UserDataSystemChangePe
 import notes.project.logic.exception.NotFoundException;
 import notes.project.logic.model.Client;
 import notes.project.logic.repository.ClientRepository;
+import notes.project.logic.repository.DirectoryRepository;
+import notes.project.logic.repository.NoteRepository;
 import notes.project.logic.service.api.ClientService;
 import notes.project.logic.service.api.impl.ClientServiceImpl;
 import notes.project.logic.service.integration.http.FileSystemRestService;
 import notes.project.logic.service.integration.http.UserDataSystemRestService;
 import notes.project.logic.utils.*;
 import notes.project.logic.utils.mapper.*;
+import org.hibernate.validator.constraints.Mod10Check;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +44,10 @@ class ClientServiceImplTest {
     private UserDataSystemRestService userDataSystemRestService;
     @Mock
     private AuthHelper authHelper;
+    @Mock
+    private DirectoryRepository directoryRepository;
+    @Mock
+    private NoteRepository noteRepository;
     private ClientService service;
 
     @BeforeEach
@@ -56,7 +63,9 @@ class ClientServiceImplTest {
             TestUtils.getComplexMapper(DeleteHistoryResponseMapper.class),
             TestUtils.getComplexMapper(ChangePersonalInfoRequestMapper.class),
             TestUtils.getComplexMapper(AllClientsListMapper.class),
-            ApplicationPropertiesUtils.getApplicationPropertiesForClientService()
+            ApplicationPropertiesUtils.getApplicationPropertiesForClientService(),
+            directoryRepository,
+            noteRepository
         );
     }
 

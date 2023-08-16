@@ -110,4 +110,11 @@ public class NoteController {
     ) {
         noteService.denyAccess(noteExternalId, clients);
     }
+
+    @GetMapping("/myAccess")
+    @ApiOperation(value =  "Получение всех НЕ своих записок, к которым есть доступ")
+    @Secured("ROLE_USER")
+    public AccessedNotesResponseDto getAllMyAccessedNotes() {
+        return noteService.getMyAccessedNotes();
+    }
 }

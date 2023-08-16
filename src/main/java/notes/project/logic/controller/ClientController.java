@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import notes.project.logic.dto.api.*;
+import notes.project.logic.dto.api.admin.ClusterAdminDto;
+import notes.project.logic.dto.api.admin.DeletedObjectsList;
 import notes.project.logic.utils.mapper.dto.ChangePersonalInfoMappingDto;
 import notes.project.logic.service.api.ClientService;
 import org.springframework.security.access.annotation.Secured;
@@ -21,7 +23,7 @@ public class ClientController {
 
     @GetMapping("/{externalId}")
     @ApiOperation("Запрос личных данных пользователя")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public PersonalInfoDto getPersonalInfo(@ApiParam(value = "Внешний ID клиента") @PathVariable(name = "externalId") UUID externalId) {
         return clientService.getPersonalInfo(externalId);
     }
@@ -63,4 +65,17 @@ public class ClientController {
         return clientService.getAllClients();
     }
 
+    @GetMapping("/{externalId}/admin")
+    @ApiOperation("Запрос кластера для админа")
+    @Secured({"ROLE_ADMIN"})
+    public ClusterAdminDto getClusterForAdmin(@PathVariable(name = "externalId") UUID externalId) {
+        return clientService.getClientInfo(externalId);
+    }
+
+    @GetMapping("/{externalId}/deleted")
+    @ApiOperation("Удаленные объекты клиента")
+    @Secured({"ROLE_ADMIN"})
+    public DeletedObjectsList getDeletedObjects(@PathVariable(name = "externalId") UUID externalId) {
+        return clientService.getDeletedObjects(externalId);
+    }
 }

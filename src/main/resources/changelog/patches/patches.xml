@@ -7,4 +7,5 @@
     <!--Add cluster column-->
     <include file="changelog/patches/add-cluster-column/add-cluster-column.xml"/>
     <include file="changelog/patches/add-deleted-columns/add-deleted-columns.xml"/>
+    <include file="changelog/patches/add-title-column/add-title-column.xml"/>
 </databaseChangeLog>

@@ -18,4 +18,6 @@ public interface AccessService {
     List<Access> getAllAccessesToNote(Note note);
 
     void denyAccess(Note note, Client client);
+
+    List<Access> findAllAccessesOfClient(Client client);
 }

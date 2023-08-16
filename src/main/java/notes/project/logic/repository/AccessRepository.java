@@ -17,4 +17,6 @@ public interface AccessRepository extends JpaRepository<Access, Long> {
     List<Access> findAllByNote(Note note);
 
     void deleteByNoteAndClient(Note note, Client client);
+
+    List<Access> findAllByClient(Client client);
 }

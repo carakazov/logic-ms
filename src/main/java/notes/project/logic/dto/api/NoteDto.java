@@ -1,6 +1,7 @@
 package notes.project.logic.dto.api;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,4 +18,7 @@ public class NoteDto {
     private LocalDateTime creationDate;
     @ApiModelProperty(value = "Название записки")
     private String title;
+
+    @ApiModelProperty(value = "Внешний ID записки. Возвращается только в методе запросе не свои записок")
+    private UUID externalId;
 }
